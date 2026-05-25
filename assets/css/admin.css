@@ -11,6 +11,9 @@ a{color:var(--gold)}
 .login-card input{width:100%;padding:.85rem;margin:1rem 0;border:2px solid var(--border);border-radius:10px;background:var(--dark);color:var(--text);font-size:1rem}
 .login-error{background:#5c1a1a;color:#ffb4b4;padding:.65rem;border-radius:8px;margin-bottom:.5rem;font-size:.9rem}
 .login-back{display:block;margin-top:1rem;color:#aaa;font-size:.9rem}
+.btn-install-pwa{display:block;width:calc(100% - 2.5rem);margin:.75rem 1.25rem;padding:.7rem 1rem;background:linear-gradient(135deg,#f5a623,#ffaa00);color:#1a1208;border:0;border-radius:10px;font-weight:800;font-size:.9rem;cursor:pointer;font-family:inherit}
+.btn-install-pwa.login-install{width:100%;margin:1rem 0 0}
+.btn-install-pwa[hidden]{display:none!important}
 
 .admin-app{display:flex;min-height:100vh}
 .admin-menu-btn{display:none;position:fixed;top:12px;right:12px;z-index:100;background:var(--panel);border:1px solid var(--border);color:var(--text);padding:.5rem .75rem;border-radius:8px;font-size:1.25rem;cursor:pointer}

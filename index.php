@@ -378,7 +378,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
     <div class="lightbox" id="lightbox" hidden><button type="button" class="lightbox-close">&times;</button><img src="" alt="" id="lightboxImg"></div>
     <div class="toast" id="toast" hidden role="alert"></div>
 
-    <script>window.DA_CSRF = <?= json_encode(csrf_token(), JSON_THROW_ON_ERROR) ?>;</script>
+    <script>window.DA_CSRF = <?= json_encode(csrf_token(), JSON_UNESCAPED_UNICODE) ?>;</script>
     <script src="<?= asset('assets/js/main.min.js') ?>" defer></script>
 </body>
 </html>

@@ -68,12 +68,8 @@ if ($payment === 'bank_transfer' && !empty($_FILES['receipt']['name'])) {
         $mime = finfo_file($finfo, $file['tmp_name']);
         finfo_close($finfo);
         if (in_array($mime, $allowed, true) && $file['size'] <= MAX_RECEIPT_BYTES) {
-            $ext = match ($mime) {
-                'image/jpeg' => 'jpg',
-                'image/png' => 'png',
-                'image/webp' => 'webp',
-                default => 'jpg',
-            };
+            $extMap = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
+            $ext = $extMap[$mime] ?? 'jpg';
             $fname = 'receipt_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
             $dest = UPLOAD_RECEIPTS . '/' . $fname;
             if (move_uploaded_file($file['tmp_name'], $dest)) {

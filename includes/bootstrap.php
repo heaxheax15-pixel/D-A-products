@@ -8,6 +8,13 @@ if (!defined('DA_APP')) {
 require_once dirname(__DIR__) . '/config.php';
 
 if (session_status() === PHP_SESSION_NONE) {
+    $sessionDir = dirname(__DIR__) . '/storage/sessions';
+    if (!is_dir($sessionDir)) {
+        @mkdir($sessionDir, 0700, true);
+    }
+    if (is_writable($sessionDir)) {
+        session_save_path($sessionDir);
+    }
     session_start([
         'cookie_httponly' => true,
         'cookie_samesite' => 'Lax',

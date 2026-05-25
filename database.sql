@@ -51,8 +51,9 @@ CREATE TABLE IF NOT EXISTS settings (
 INSERT INTO products (name, slug, description, price, image, category, is_bestseller, is_featured, sort_order) VALUES
 ('عسل سدر جبلي', 'sidr-mountain', 'عسل سدر جبلي أصيل من مرتفعات الجنوب، غني النكهة وقوامه متوازن.', 120.00, 'images/product-sidr.webp', 'sidr', 1, 1, 1),
 ('عسل زهور برية', 'wildflower', 'مزيج من رحيق الزهور البرية، لون ذهبي فاتح ونكهة متوازنة.', 85.00, 'images/product-wildflower.webp', 'flowers', 0, 0, 2),
-('عسل أكاسيا', 'acacia', 'عسل أكاسيا خفيف القوام، مثالي للشاي والمخبوزات.', 95.00, 'images/product-acacia.webp', 'flowers', 0, 0, 3),
-('عسل براح طبيعي', 'natural-comb', 'قطع عسل الشهد الطبيعي مع العسل السائل – تجربة أصيلة.', 150.00, 'images/product-comb.webp', 'comb', 0, 0, 4)
+('عسل طلح جبلي', 'talh-mountain', 'عسل طلح جبلي نادر، نكهة قوية ولون كهرماني داكن.', 110.00, 'images/product-acacia.webp', 'talh', 0, 0, 3),
+('عسل أكاسيا', 'acacia', 'عسل أكاسيا خفيف القوام، مثالي للشاي والمخبوزات.', 95.00, 'images/product-acacia.webp', 'flowers', 0, 0, 4),
+('عسل براح طبيعي', 'natural-comb', 'قطع عسل الشهد الطبيعي مع العسل السائل – تجربة أصيلة.', 150.00, 'images/product-comb.webp', 'comb', 0, 0, 5)
 ON DUPLICATE KEY UPDATE name = VALUES(name);
 
 INSERT INTO settings (setting_key, setting_value) VALUES

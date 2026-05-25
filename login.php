@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 define('DA_APP', true);
 require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/pwa.php';
 
 admin_try_legacy_key();
 if (admin_logged_in()) {
@@ -27,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دخول لوحة التحكم – D&A</title>
     <link rel="stylesheet" href="<?= asset('assets/css/admin.min.css') ?>">
+    <?php pwa_head_tags(); ?>
 </head>
 <body class="login-page">
     <form class="login-card" method="post">
@@ -36,7 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($error): ?><div class="login-error"><?= e($error) ?></div><?php endif; ?>
         <input type="password" name="secret_key" placeholder="مفتاح الأمان" required autofocus autocomplete="current-password">
         <button type="submit" class="btn-admin-primary">دخول</button>
+        <button type="button" class="btn-install-pwa login-install" id="installPwaBtn" hidden>📲 تثبيت التطبيق على الجوال</button>
         <a href="index.php" class="login-back">← العودة للمتجر</a>
     </form>
+    <script src="<?= asset('assets/js/admin.js') ?>" defer></script>
+    <?php pwa_register_script(); ?>
 </body>
 </html>

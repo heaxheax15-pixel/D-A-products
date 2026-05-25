@@ -19,3 +19,11 @@
     ExpiresByType text/css "access plus 1 week"
     ExpiresByType application/javascript "access plus 1 week"
 </IfModule>
+
+# PWA: Service Worker من الجذر أو المجلد الفرعي
+<Files "service-worker.js">
+    <IfModule mod_headers.c>
+        Header set Service-Worker-Allowed "/"
+        Header set Cache-Control "no-cache"
+    </IfModule>
+</Files>

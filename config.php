@@ -20,7 +20,7 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
-define('ADMIN_SECRET_KEY', 'CHANGE_ME_STRONG_KEY_2026');
+define('ADMIN_SECRET_KEY', 'A&DBOUTIQUE21');
 
 define('BANK_NAME', 'البنك الأهلي السعودي');
 define('BANK_ACCOUNT_HOLDER', 'D&A Product');
@@ -121,4 +121,27 @@ function category_label(string $cat): string
 {
     $labels = ['sidr' => 'عسل السدر', 'flowers' => 'عسل الزهور', 'talh' => 'عسل الطلح', 'comb' => 'عسل الشهد'];
     return $labels[$cat] ?? $cat;
+}
+
+/** مسار التطبيق عند الاستضافة في مجلد فرعي (فارغ = الجذر). */
+function app_base(): string
+{
+    static $base = null;
+    if ($base !== null) {
+        return $base;
+    }
+    $dir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+    if ($dir === '/' || $dir === '.' || $dir === '') {
+        $base = '';
+    } else {
+        $base = rtrim($dir, '/');
+    }
+    return $base;
+}
+
+function app_url(string $path = ''): string
+{
+    $path = ltrim($path, '/');
+    $base = app_base();
+    return ($base !== '' ? $base . '/' : '/') . $path;
 }
