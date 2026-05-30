@@ -8,57 +8,154 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'config.php') {
     exit('Forbidden');
 }
 
-define('APP_VERSION', '2.0.0');
+// ============================================================================
+// ENVIRONMENT VARIABLE PARSER (Native, no Composer dependencies)
+// ============================================================================
+function load_env_file(string $envPath = null): void
+{
+    if ($envPath === null) {
+        $envPath = dirname(__DIR__) . '/.env';
+    }
+
+    if (!file_exists($envPath)) {
+        return; // .env file is optional, constants can be set via PHP env
+    }
+
+    $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        // Skip comments and empty lines
+        if (str_starts_with(trim($line), '#') || trim($line) === '') {
+            continue;
+        }
+
+        // Parse KEY=VALUE
+        if (strpos($line, '=') === false) {
+            continue;
+        }
+
+        [$key, $value] = explode('=', $line, 2);
+        $key = trim($key);
+        $value = trim($value);
+
+        // Remove quotes if present
+        if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
+            $value = substr($value, 1, -1);
+        } elseif (str_starts_with($value, "'") && str_ends_with($value, "'")) {
+            $value = substr($value, 1, -1);
+        }
+
+        // Only set if not already set via environment or php.ini
+        if (!getenv($key)) {
+            putenv("$key=$value");
+        }
+    }
+}
+
+/**
+ * Helper function to safely get environment variables with fallback
+ */
+function env(string $key, ?string $default = null): ?string
+{
+    $value = getenv($key);
+    if ($value === false) {
+        return $default;
+    }
+    return $value;
+}
+
+// Load .env file before defining constants
+load_env_file();
+
+// ============================================================================
+// APPLICATION CONSTANTS (from env or defaults)
+// ============================================================================
+define('APP_VERSION', env('APP_VERSION', '2.0.0'));
+/** true = عرض الأخطاء (تطوير محلي فقط). false = إنتاج. */
+define('APP_DEBUG', (bool) filter_var(env('APP_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN));
 define('APP_ROOT', __DIR__);
 define('UPLOAD_RECEIPTS', APP_ROOT . '/uploads/receipts');
 define('UPLOAD_PRODUCTS', APP_ROOT . '/uploads/products');
 define('MAX_RECEIPT_BYTES', 3 * 1024 * 1024);
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'da_honey_shop');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_CHARSET', 'utf8mb4');
+// Database Configuration (from .env)
+define('DB_HOST', env('DB_HOST', '127.0.0.1'));
+define('DB_PORT', env('DB_PORT', '3306'));
+define('DB_NAME', env('DB_NAME', 'da_honey_shop'));
+define('DB_USER', env('DB_USER', 'da_shop'));
+define('DB_PASS', env('DB_PASS', 'da_honey_local'));
+define('DB_CHARSET', env('DB_CHARSET', 'utf8mb4'));
 
-define('ADMIN_SECRET_KEY', 'A&DBOUTIQUE21');
+// Admin Authentication (from .env, will be hashed in auth.php)
+define('ADMIN_SECRET_KEY', env('ADMIN_SECRET_KEY', 'A&DBOUTIQUE21'));
 
-define('BANK_NAME', 'البنك الأهلي السعودي');
-define('BANK_ACCOUNT_HOLDER', 'D&A Product');
-define('BANK_IBAN', 'SA00 0000 0000 0000 0000 0000');
+// WhatsApp Integration
+define('WHATSAPP_ENABLED', (bool) filter_var(env('WHATSAPP_ENABLED', 'true'), FILTER_VALIDATE_BOOLEAN));
+define('WHATSAPP_PHONE_NUMBER_ID', env('WHATSAPP_PHONE_NUMBER_ID', 'YOUR_PHONE_NUMBER_ID'));
+define('WHATSAPP_ACCESS_TOKEN', env('WHATSAPP_ACCESS_TOKEN', 'YOUR_PERMANENT_ACCESS_TOKEN'));
+define('WHATSAPP_NOTIFY_TO', env('WHATSAPP_NOTIFY_TO', '213663569663'));
+define('WHATSAPP_GREETING', env('WHATSAPP_GREETING', 'مرحباً، أريد الاستفسار عن العسل'));
 
-define('WHATSAPP_ENABLED', true);
-define('WHATSAPP_PHONE_NUMBER_ID', 'YOUR_PHONE_NUMBER_ID');
-define('WHATSAPP_ACCESS_TOKEN', 'YOUR_PERMANENT_ACCESS_TOKEN');
-define('WHATSAPP_NOTIFY_TO', '966500000000');
-define('WHATSAPP_GREETING', 'مرحباً، أريد الاستفسار عن العسل');
+// Contact Information
+define('CONTACT_WHATSAPP', env('CONTACT_WHATSAPP', '213663569663'));
+define('CONTACT_INSTAGRAM', env('CONTACT_INSTAGRAM', 'https://instagram.com/d_a_product'));
+define('CONTACT_TIKTOK', env('CONTACT_TIKTOK', 'https://tiktok.com/@asma_hasin'));
+define('CONTACT_EMAIL', env('CONTACT_EMAIL', 'asma.hacini@gmail.com'));
+define('CONTACT_PHONE', env('CONTACT_PHONE', '213663569663'));
+define('CONTACT_FACEBOOK', env('CONTACT_FACEBOOK', 'https://facebook.com/da-honey'));
 
-define('CONTACT_WHATSAPP', '966500000000');
-define('CONTACT_INSTAGRAM', 'https://instagram.com/da_product');
-define('CONTACT_TIKTOK', 'https://tiktok.com/@da_product');
+// Bank Information
+define('BANK_NAME', env('BANK_NAME', 'بريد الجزائر CCP'));
+define('BANK_ACCOUNT_HOLDER', env('BANK_ACCOUNT_HOLDER', 'اسمك الكامل'));
+define('BANK_IBAN', env('BANK_IBAN', '007999990123456789'));
 
-define('SITE_NAME', 'D&A Product');
-define('SITE_TAGLINE', 'عسل طبيعي 100% – أصالة في كل قطرة');
-define('SITE_URL', ''); // مثال: https://example.com
-define('OG_IMAGE', 'images/pro4.webp');
+// Site Configuration
+define('SITE_NAME', env('SITE_NAME', 'D&A Product'));
+define('SITE_TAGLINE', env('SITE_TAGLINE', 'عسل طبيعي 100% – أصالة في كل قطرة'));
+define('SITE_URL', env('SITE_URL', ''));
+define('OG_IMAGE', env('OG_IMAGE', 'images/pro4.webp'));
+
+function db_driver(): string
+{
+    return db()->getAttribute(PDO::ATTR_DRIVER_NAME);
+}
 
 function db(): PDO
 {
     static $pdo = null;
-    if ($pdo === null) {
-        $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+    if ($pdo !== null) {
+        return $pdo;
+    }
+
+    // MySQL connection (required for production)
+    $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
+    try {
         $pdo = new PDO($dsn, DB_USER, DB_PASS, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
         ]);
+    } catch (PDOException $e) {
+        error_log('[D&A] Database Error: ' . $e->getMessage());
+        http_response_code(503);
+        die('قاعدة البيانات غير متاحة حالياً. يرجى المحاولة لاحقاً.');
     }
+
     return $pdo;
+}
+
+function whatsapp_api_configured(): bool
+{
+    return WHATSAPP_ENABLED
+        && WHATSAPP_PHONE_NUMBER_ID !== 'YOUR_PHONE_NUMBER_ID'
+        && WHATSAPP_ACCESS_TOKEN !== 'YOUR_PERMANENT_ACCESS_TOKEN'
+        && WHATSAPP_PHONE_NUMBER_ID !== ''
+        && WHATSAPP_ACCESS_TOKEN !== '';
 }
 
 function send_whatsapp_notification(string $message): bool
 {
-    if (!WHATSAPP_ENABLED || WHATSAPP_ACCESS_TOKEN === 'YOUR_PERMANENT_ACCESS_TOKEN') {
-        error_log('[D&A] WhatsApp غير مُعدّ.');
+    if (!whatsapp_api_configured()) {
+        error_log('[D&A] WhatsApp غير مُعدّ — استبدل WHATSAPP_PHONE_NUMBER_ID و WHATSAPP_ACCESS_TOKEN في config.php');
         return false;
     }
     $url = 'https://graph.facebook.com/v21.0/' . WHATSAPP_PHONE_NUMBER_ID . '/messages';

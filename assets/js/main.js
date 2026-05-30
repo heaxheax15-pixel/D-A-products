@@ -238,7 +238,7 @@
       e.preventDefault();
       var phone = document.getElementById("customer_phone");
       if (phone && !phone.checkValidity()) {
-        showToast("رقم الهاتف غير صالح.", true);
+        showToast("رقم الهاتف غير صالح. استخدم 10 أرقام تبدأ بـ 05 أو 06 أو 07.", true);
         return;
       }
       var btn = document.getElementById("submitBtn");

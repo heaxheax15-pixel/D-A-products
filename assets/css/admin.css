@@ -37,6 +37,7 @@ a{color:var(--gold)}
 .admin-table th,.admin-table td{padding:.75rem;border-bottom:1px solid var(--border);vertical-align:top;text-align:right}
 .admin-table th{background:rgba(0,0,0,.25);color:var(--gold)}
 .admin-flash{background:#1e4620;color:#b8e6b8;padding:.75rem;border-radius:8px;margin-bottom:1rem}
+.admin-flash-error{background:#4a1515;color:#ffc9c9;border:1px solid #8b2e2e}
 .admin-filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
 .admin-filters input,.admin-filters select{padding:.6rem;border-radius:8px;border:1px solid var(--border);background:var(--panel);color:var(--text)}
 .btn-admin-primary,.btn-admin-secondary{display:inline-block;padding:.65rem 1.25rem;border-radius:10px;font-weight:700;border:0;cursor:pointer;font-family:inherit;text-decoration:none}

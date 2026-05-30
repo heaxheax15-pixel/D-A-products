@@ -1,12 +1,40 @@
 {
+  "id": "da-admin-dashboard",
   "name": "D&A Dashboard",
   "short_name": "D&A",
-  "start_url": "/login.php",
+  "description": "لوحة تحكم متجر D&A Product – إدارة الطلبات والمنتجات",
+  "start_url": "login.php",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#FFFDF7",
-  "theme_color": "#F5A623",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "dir": "rtl",
+  "lang": "ar",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

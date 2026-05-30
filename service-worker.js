@@ -1,5 +1,5 @@
 /* D&A Admin PWA Service Worker */
-const CACHE_VERSION = 'da-admin-v2';
+const CACHE_VERSION = 'da-admin-v4';
 const OFFLINE_URL = 'offline.html';
 
 const PRECACHE = [
@@ -11,7 +11,7 @@ const PRECACHE = [
   'favicon.svg',
   'icons/icon-192.png',
   'icons/icon-512.png',
-  'manifest.php',
+  'manifest.json',
 ];
 
 function baseFromScope(scope) {
@@ -55,6 +55,13 @@ self.addEventListener('fetch', function (event) {
 
   if (req.method !== 'GET') return;
   if (url.pathname.includes('config.php') || url.pathname.includes('submit-order') || url.pathname.includes('logout.php')) {
+    return;
+  }
+
+  var accept = req.headers.get('accept') || '';
+  var isDynamicPage = url.pathname.endsWith('.php') || accept.indexOf('text/html') !== -1;
+  if (isDynamicPage) {
+    event.respondWith(fetch(req));
     return;
   }
 

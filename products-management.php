@@ -10,6 +10,7 @@ $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     admin_require_login();
+    csrf_require();
     $action = (string) ($_POST['action'] ?? '');
 
     if ($action === 'delete') {
@@ -81,12 +82,14 @@ $products = get_products(false);
 
 admin_header($edit ? 'تعديل منتج' : 'إدارة المنتجات', 'products');
 ?>
+<?php if ($csrfErr = admin_flash_error()): ?><div class="admin-flash admin-flash-error"><?= e($csrfErr) ?></div><?php endif; ?>
 <?php if ($message): ?><div class="admin-flash"><?= e($message) ?></div><?php endif; ?>
 
 <div class="admin-grid-2">
     <section class="admin-panel">
         <h2><?= $edit ? 'تعديل' : 'إضافة منتج' ?></h2>
         <form method="post" enctype="multipart/form-data" class="admin-form">
+            <?= csrf_field() ?>
             <input type="hidden" name="action" value="save">
             <input type="hidden" name="id" value="<?= (int) ($edit['id'] ?? 0) ?>">
             <input type="hidden" name="current_image" value="<?= e($edit['image'] ?? 'images/pro4.webp') ?>">
@@ -123,6 +126,7 @@ admin_header($edit ? 'تعديل منتج' : 'إدارة المنتجات', 'pro
                         <td>
                             <a href="?edit=<?= (int) $p['id'] ?>">تعديل</a>
                             <form method="post" style="display:inline" onsubmit="return confirm('إخفاء المنتج؟')">
+                                <?= csrf_field() ?>
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
                                 <button type="submit" class="link-danger">حذف</button>

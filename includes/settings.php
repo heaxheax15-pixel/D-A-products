@@ -45,10 +45,12 @@ function runtime(string $constName, string $fallback): string
 
 function save_setting(string $key, string $value): void
 {
-    $stmt = db()->prepare(
-        'INSERT INTO settings (setting_key, setting_value) VALUES (?, ?)
-         ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)'
-    );
+    $sql = db_driver() === 'sqlite'
+        ? 'INSERT INTO settings (setting_key, setting_value) VALUES (?, ?)
+           ON CONFLICT(setting_key) DO UPDATE SET setting_value = excluded.setting_value'
+        : 'INSERT INTO settings (setting_key, setting_value) VALUES (?, ?)
+           ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)';
+    $stmt = db()->prepare($sql);
     $stmt->execute([$key, $value]);
     $GLOBALS['da_settings'][$key] = $value;
 }

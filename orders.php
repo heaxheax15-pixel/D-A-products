@@ -30,6 +30,7 @@ if (!empty($_GET['export']) && $_GET['export'] === 'csv') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     admin_require_login();
+    csrf_require();
     $orderId = (int) ($_POST['order_id'] ?? 0);
     $newStatus = (string) ($_POST['status'] ?? '');
     if ($orderId > 0 && in_array($newStatus, $statuses, true)) {
@@ -57,6 +58,7 @@ $orders = $stmt->fetchAll();
 
 admin_header('الطلبات', 'orders');
 ?>
+<?php if ($csrfErr = admin_flash_error()): ?><div class="admin-flash admin-flash-error"><?= e($csrfErr) ?></div><?php endif; ?>
 <form class="admin-filters" method="get">
     <select name="status">
         <option value="">كل الحالات</option>
@@ -90,6 +92,7 @@ admin_header('الطلبات', 'orders');
                 <td data-label="الدفع"><?= e(payment_label($o['payment_method'])) ?></td>
                 <td data-label="الحالة">
                     <form method="post">
+                        <?= csrf_field() ?>
                         <input type="hidden" name="order_id" value="<?= (int) $o['id'] ?>">
                         <input type="hidden" name="update_status" value="1">
                         <select name="status" onchange="this.form.submit()">

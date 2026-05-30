@@ -21,3 +21,25 @@ function csrf_verify(): bool
         && !empty($_SESSION['csrf_token'])
         && hash_equals($_SESSION['csrf_token'], $token);
 }
+
+/** يوقف طلبات POST الإدارية عند فشل التحقق من CSRF. */
+function csrf_require(): void
+{
+    if (csrf_verify()) {
+        return;
+    }
+    $_SESSION['admin_flash_error'] = 'انتهت صلاحية الجلسة. أعد تحميل الصفحة وحاول مجدداً.';
+    $target = $_SERVER['HTTP_REFERER'] ?? 'dashboard.php';
+    header('Location: ' . $target);
+    exit;
+}
+
+function admin_flash_error(): ?string
+{
+    if (empty($_SESSION['admin_flash_error'])) {
+        return null;
+    }
+    $msg = (string) $_SESSION['admin_flash_error'];
+    unset($_SESSION['admin_flash_error']);
+    return $msg;
+}

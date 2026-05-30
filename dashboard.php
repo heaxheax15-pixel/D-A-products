@@ -8,7 +8,10 @@ require_once __DIR__ . '/includes/admin-layout.php';
 $stats = ['total' => 0, 'today' => 0, 'pending' => 0, 'revenue' => 0.0];
 try {
     $stats['total'] = (int) db()->query('SELECT COUNT(*) FROM orders')->fetchColumn();
-    $stats['today'] = (int) db()->query('SELECT COUNT(*) FROM orders WHERE DATE(created_at) = CURDATE()')->fetchColumn();
+    $todaySql = db_driver() === 'sqlite'
+        ? "SELECT COUNT(*) FROM orders WHERE date(created_at) = date('now')"
+        : 'SELECT COUNT(*) FROM orders WHERE DATE(created_at) = CURDATE()';
+    $stats['today'] = (int) db()->query($todaySql)->fetchColumn();
     $stats['pending'] = (int) db()->query("SELECT COUNT(*) FROM orders WHERE status = 'pending'")->fetchColumn();
     $stats['revenue'] = (float) db()->query("SELECT COALESCE(SUM(total_price),0) FROM orders WHERE status NOT IN ('cancelled')")->fetchColumn();
 } catch (Throwable $e) {

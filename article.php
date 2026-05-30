@@ -47,7 +47,9 @@ $ig = runtime('CONTACT_INSTAGRAM', CONTACT_INSTAGRAM);
         <a href="index.php#order" class="btn btn-primary">اطلب عسلك الآن</a>
     </article>
     <footer class="site-footer site-footer-compact">
-        <div class="container"><p>&copy; <?= date('Y') ?> D&amp;A Product</p></div>
+        <div class="container">
+            <p>&copy; <?= date('Y') ?> D&amp;A Product | <a href="privacy-policy.php" style="color: #4caf50; text-decoration: none;">سياسة الخصوصية والشروط</a></p>
+        </div>
     </footer>
 </body>
 </html>

@@ -38,9 +38,26 @@ CREATE TABLE IF NOT EXISTS products (
   is_featured TINYINT(1) NOT NULL DEFAULT 0,
   is_active TINYINT(1) NOT NULL DEFAULT 1,
   sort_order INT NOT NULL DEFAULT 0,
+  quantity_available INT NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_category (category),
-  INDEX idx_active (is_active)
+  INDEX idx_active (is_active),
+  INDEX idx_quantity (quantity_available)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS inventory_transactions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT NOT NULL,
+  order_id INT NULL,
+  quantity_change INT NOT NULL,
+  transaction_type VARCHAR(30) NOT NULL DEFAULT 'order',
+  notes TEXT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_product (product_id),
+  INDEX idx_order (order_id),
+  INDEX idx_created (created_at),
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS settings (
@@ -49,11 +66,11 @@ CREATE TABLE IF NOT EXISTS settings (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO products (name, slug, description, price, image, category, is_bestseller, is_featured, sort_order) VALUES
-('عسل سدر جبلي', 'sidr-mountain', 'عسل سدر جبلي أصيل من مرتفعات الجنوب، غني النكهة وقوامه متوازن.', 120.00, 'images/product-sidr.webp', 'sidr', 1, 1, 1),
-('عسل زهور برية', 'wildflower', 'مزيج من رحيق الزهور البرية، لون ذهبي فاتح ونكهة متوازنة.', 85.00, 'images/product-wildflower.webp', 'flowers', 0, 0, 2),
-('عسل طلح جبلي', 'talh-mountain', 'عسل طلح جبلي نادر، نكهة قوية ولون كهرماني داكن.', 110.00, 'images/product-acacia.webp', 'talh', 0, 0, 3),
-('عسل أكاسيا', 'acacia', 'عسل أكاسيا خفيف القوام، مثالي للشاي والمخبوزات.', 95.00, 'images/product-acacia.webp', 'flowers', 0, 0, 4),
-('عسل براح طبيعي', 'natural-comb', 'قطع عسل الشهد الطبيعي مع العسل السائل – تجربة أصيلة.', 150.00, 'images/product-comb.webp', 'comb', 0, 0, 5)
+('عسل سدر جبلي', 'sidr-mountain', 'عسل سدر جبلي أصيل من مرتفعات الجنوب، غني النكهة وقوامه متوازن. مثالي للاستخدام اليومي ولتعزيز المناعة.', 500.00, 'images/product-sidr.webp', 'sidr', 1, 1, 1),
+('عسل زهرة البرتقالة', 'wildflower', 'مزيج رائع من رحيق الزهور البرية، لون ذهبي فاتح ونكهة متوازنة تناسب جميع أفراد العائلة.', 350.00, 'images/product-wildflower.webp', 'flowers', 0, 0, 2),
+('عسل طلح جبلي', 'talh-mountain', 'عسل طلح جبلي نادر، نكهة قوية ولون كهرماني داكن — من أجود أنواع العسل المحلي.', 450.00, 'images/product-acacia.webp', 'talh', 0, 0, 3),
+('عسل أكاسيا', 'acacia', 'عسل أكاسيا خفيف القوام، يذوب بسرعة ولا يتبلور بسهولة. الخيار الأمثل لمحبي الشاي والمخبوزات.', 380.00, 'images/product-acacia.webp', 'flowers', 0, 0, 4),
+('عسل براح طبيعي', 'natural-comb', 'قطع عسل الشهد الطبيعي مع العسل السائل – تجربة أصيلة وطبيعية 100%.', 600.00, 'images/product-comb.webp', 'comb', 0, 0, 5)
 ON DUPLICATE KEY UPDATE name = VALUES(name);
 
 INSERT INTO settings (setting_key, setting_value) VALUES

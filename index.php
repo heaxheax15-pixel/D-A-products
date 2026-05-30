@@ -9,6 +9,9 @@ if (extension_loaded('zlib')) {
 
 define('DA_APP', true);
 require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/pwa.php';
+
+header('Vary: Accept-Encoding');
 
 $products = get_products();
 $featured = get_featured_product();
@@ -27,8 +30,9 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>D&A Product | عسل طبيعي فاخر – أصالة الطبيعة في كل قطرة</title>
+    <?php pwa_head_tags(); ?>
     <meta name="description" content="متجر D&A Product – عسل طبيعي 100% معصور على البارد من مناحل جبلية. توصيل سريع، جودة مضمونة، وطلب مباشر بدون تعقيد.">
     <meta name="keywords" content="عسل طبيعي, عسل سدر, D&A Product, عسل جبلي, مناحل">
     <meta property="og:title" content="D&A Product | عسل طبيعي فاخر">
@@ -210,8 +214,8 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
             <div class="filter-bar">
                 <button type="button" class="filter-btn active" data-filter="all">الكل</button>
                 <button type="button" class="filter-btn" data-filter="sidr">عسل السدر</button>
+                <button type="button" class="filter-btn" data-filter="talh">عسل زهرة البرتقال</button>
                 <button type="button" class="filter-btn" data-filter="flowers">عسل الزهور</button>
-                <button type="button" class="filter-btn" data-filter="talh">عسل الطلح</button>
                 <button type="button" class="filter-btn" data-filter="comb">عسل الشهد</button>
             </div>
             <div class="products-grid" id="productsGrid">
@@ -308,7 +312,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
             <form class="order-form" id="orderForm" action="submit-order.php" method="post" enctype="multipart/form-data" novalidate>
                 <?= csrf_field() ?>
                 <div class="form-row"><label for="customer_name">الاسم الكامل *</label><input type="text" id="customer_name" name="customer_name" required autocomplete="name"></div>
-                <div class="form-row"><label for="customer_phone">رقم الهاتف *</label><input type="tel" id="customer_phone" name="customer_phone" required pattern="^(05|5|9665)[0-9]{8,9}$" placeholder="05xxxxxxxx" dir="ltr" title="رقم سعودي صالح"></div>
+                <div class="form-row"><label for="customer_phone">رقم الهاتف *</label><input type="tel" id="customer_phone" name="customer_phone" required pattern="<?= e(algerian_phone_pattern_html()) ?>" placeholder="05xxxxxxxx" dir="ltr" title="رقم جزائري: 10 أرقام تبدأ بـ 05 أو 06 أو 07"></div>
                 <div class="form-row"><label for="customer_address">العنوان *</label><textarea id="customer_address" name="customer_address" required rows="3"></textarea></div>
                 <div class="form-row form-row-2">
                     <div><label for="product_name">المنتج *</label>
@@ -325,17 +329,27 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                 <div class="form-row"><label for="notes">ملاحظات</label><textarea id="notes" name="notes" rows="2"></textarea></div>
                 <fieldset class="payment-fieldset">
                     <legend>طريقة الدفع *</legend>
-                    <label class="radio-card"><input type="radio" name="payment_method" value="bank_transfer" required><span>تحويل بنكي</span></label>
+                    <label class="radio-card">
+    <input type="radio" name="payment_method" value="bank_transfer" required>
+    <span>الدفع عبر CCP / BaridiMob</span>
+</label>
                     <label class="radio-card"><input type="radio" name="payment_method" value="cod" required><span>الدفع عند الاستلام</span></label>
                 </fieldset>
                 <div class="bank-info" id="bankInfo" hidden>
                     <h3>معلومات التحويل</h3>
-                    <p><strong>البنك:</strong> <?= e($bankName) ?></p>
-                    <p><strong>الحساب:</strong> <?= e($bankHolder) ?></p>
-                    <p><strong>IBAN:</strong> <code dir="ltr"><?= e($bankIban) ?></code></p>
-                    <label class="receipt-label">إرفاق إيصال التحويل (اختياري)
-                        <input type="file" name="receipt" id="receipt" accept="image/jpeg,image/png,image/webp">
-                    </label>
+                    <p><strong>طريقة الدفع:</strong> CCP / BaridiMob</p>
+<p><strong>اسم صاحب الحساب:</strong> <?= e($bankHolder) ?></p>
+<p><strong>رقم CCP أو RIP:</strong> <code dir="ltr"><?= e($bankIban) ?></code></p>
+
+<label class="receipt-label">
+    إرفاق وصل الدفع (اختياري)
+    <input 
+        type="file" 
+        name="receipt" 
+        id="receipt" 
+        accept="image/jpeg,image/png,image/webp"
+    >
+</label>
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">إرسال الطلب</button>
             </form>
@@ -354,6 +368,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                 <a href="#story">قصتنا</a>
                 <a href="#order">اطلب الآن</a>
                 <a href="#tips">نصائح العسل</a>
+                <a href="privacy-policy.php">سياسة الخصوصية والشروط</a>
             </div>
             <div class="footer-col">
                 <h4>تواصل معنا</h4>
