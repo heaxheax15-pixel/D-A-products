@@ -39,12 +39,16 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
     <meta property="og:description" content="عسل طبيعي 100% مستخلص بعناية من أفضل المناحل الجبلية.">
     <meta property="og:image" content="<?= e($ogImg) ?>">
     <meta property="og:type" content="website">
-    <meta property="og:locale" content="ar_SA">
+    <meta property="og:locale" content="ar_DZ">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= asset('assets/css/style.min.css') ?>">
+    <!-- modern design system -->
+    <link rel="stylesheet" href="<?= asset('assets/css/modern.min.css') ?>">
+    <style>
+        /* أي تجاوزات إضافية يمكن وضعها هنا، لكن التصميم الأساسي في modern.min.css */
+    </style>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -59,21 +63,19 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
     </script>
 </head>
 <body>
+    <!-- ========== HEADER ========== -->
     <header class="site-header" id="siteHeader">
-        <div class="header-bg-logo" style="background-image:url(images/pro4.webp)" aria-hidden="true"></div>
         <div class="container header-inner">
             <a href="#top" class="logo">
-                <svg class="logo-bee bee-animated" viewBox="0 0 32 32" width="36" height="36" aria-hidden="true">
-                    <ellipse cx="16" cy="18" rx="9" ry="7" fill="#FFAA00"/>
-                    <rect x="8" y="14" width="16" height="3" fill="#3d2914" opacity=".5"/>
-                    <rect x="8" y="19" width="16" height="3" fill="#3d2914" opacity=".5"/>
-                    <circle cx="16" cy="10" r="5" fill="#F5A623"/>
-                    <ellipse cx="11" cy="8" rx="4" ry="2" fill="rgba(255,255,255,.45)" transform="rotate(-30 11 8)"/>
-                    <ellipse cx="21" cy="8" rx="4" ry="2" fill="rgba(255,255,255,.45)" transform="rotate(30 21 8)"/>
-                </svg>
-                <span class="logo-text">D&amp;A Product</span>
-            </a>
-            <button class="nav-toggle" type="button" aria-label="القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
+  <!-- الشعار الفني -->
+  <img src="<?= asset('images/logo.svg') ?>" alt="D&A Product" width="60" height="60">
+  <!-- الاسم الكتابي يبقى ظاهراً -->
+  <span class="logo-text">D&amp;A Product</span>
+</a>
+                
+            <button class="nav-toggle" type="button" aria-label="القائمة" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
             <nav class="main-nav" id="mainNav">
                 <a href="#why">لماذا نحن</a>
                 <a href="#quality">الجودة</a>
@@ -85,11 +87,12 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                 <a href="#gallery">المعرض</a>
                 <a href="#tips">نصائح</a>
                 <a href="#order" class="nav-cta">اطلب الآن</a>
-                <button id="installAppBtn" hidden style="background:#c8860a;color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:14px;font-family:inherit;">📲 تثبيت التطبيق</button>
+                <button id="installAppBtn" hidden style="background:var(--primary);color:#fff;border:none;border-radius:60px;padding:10px 20px;cursor:pointer;font-family:inherit;font-weight:600;">📲 تثبيت التطبيق</button>
             </nav>
         </div>
     </header>
 
+    <!-- ========== HERO ========== -->
     <section class="hero" id="top">
         <div class="hero-bg zoom-bg" style="background-image:url(images/pro1.webp)"></div>
         <div class="hero-overlay"></div>
@@ -105,19 +108,37 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== WHY US ========== -->
     <section class="section why" id="why">
         <div class="container">
             <span class="section-tag">لماذا D&amp;A؟</span>
             <h2 class="section-title-center">تميزنا في كل قطرة</h2>
             <div class="features-grid">
-                <div class="glass-card reveal"><div class="feat-icon"><svg viewBox="0 0 48 48" width="40"><path fill="#FFAA00" d="M24 4l4 10h10l-8 7 3 10-9-6-9 6 3-10-8-7h10z"/></svg></div><h3>نقي طبيعياً</h3><p>عسل خام دون معالجة حرارية تُفقد فوائده.</p></div>
-                <div class="glass-card reveal"><div class="feat-icon">🚫</div><h3>بدون سكر مضاف</h3><p>نكهة أصيلة من رحيق الأزهار فقط.</p></div>
-                <div class="glass-card reveal"><div class="feat-icon">❄️</div><h3>معصور على البارد</h3><p>نحافظ على الإنزيمات والعناصر الحية.</p></div>
-                <div class="glass-card reveal"><div class="feat-icon">🚚</div><h3>توصيل سريع</h3><p>تغليف آمن ووصول لباب منزلك.</p></div>
+                <div class="glass-card reveal">
+                    <div class="feat-icon"><svg viewBox="0 0 48 48" width="40"><path fill="#FFAA00" d="M24 4l4 10h10l-8 7 3 10-9-6-9 6 3-10-8-7h10z"/></svg></div>
+                    <h3>نقي طبيعياً</h3>
+                    <p>عسل خام دون معالجة حرارية تُفقد فوائده.</p>
+                </div>
+                <div class="glass-card reveal">
+                    <div class="feat-icon">🚫</div>
+                    <h3>بدون سكر مضاف</h3>
+                    <p>نكهة أصيلة من رحيق الأزهار فقط.</p>
+                </div>
+                <div class="glass-card reveal">
+                    <div class="feat-icon">❄️</div>
+                    <h3>معصور على البارد</h3>
+                    <p>نحافظ على الإنزيمات والعناصر الحية.</p>
+                </div>
+                <div class="glass-card reveal">
+                    <div class="feat-icon">🚚</div>
+                    <h3>توصيل سريع</h3>
+                    <p>تغليف آمن ووصول لباب منزلك.</p>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- ========== QUALITY ========== -->
     <section class="section quality" id="quality">
         <div class="container section-grid">
             <figure class="section-media reveal">
@@ -132,6 +153,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== ABOUT HONEY ========== -->
     <section class="section about" id="about">
         <div class="container section-grid">
             <div class="section-text reveal">
@@ -146,6 +168,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== JOURNEY ========== -->
     <section class="section journey parallax-section" id="journey" data-parallax="images/pro3.webp">
         <div class="parallax-bg"></div>
         <div class="container journey-inner">
@@ -170,6 +193,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== TEAM ========== -->
     <section class="section team" id="team">
         <div class="container section-grid">
             <figure class="section-media reveal">
@@ -183,6 +207,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== STORY ========== -->
     <section class="section story parallax-section" id="story" data-parallax="images/pro1.webp">
         <div class="parallax-bg"></div>
         <div class="container story-content reveal">
@@ -193,6 +218,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== FEATURED PRODUCT ========== -->
     <?php if ($featured): ?>
     <section class="section featured" id="featured" style="background-image:url(images/pro4.webp)">
         <div class="featured-overlay"></div>
@@ -208,6 +234,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
     </section>
     <?php endif; ?>
 
+    <!-- ========== PRODUCTS ========== -->
     <section class="section products" id="products">
         <div class="container">
             <span class="section-tag">✨ تسوق</span>
@@ -215,7 +242,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
             <div class="filter-bar">
                 <button type="button" class="filter-btn active" data-filter="all">الكل</button>
                 <button type="button" class="filter-btn" data-filter="sidr">عسل السدر</button>
-               <button type="button" class="filter-btn" data-filter="talh">عسل الطلح</button>
+                <button type="button" class="filter-btn" data-filter="talh">عسل الطلح</button>
                 <button type="button" class="filter-btn" data-filter="flowers">عسل الزهور</button>
                 <button type="button" class="filter-btn" data-filter="comb">عسل الشهد</button>
             </div>
@@ -224,7 +251,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                     $cat = $p['category'] ?? 'flowers';
                     $img = product_image_url($p);
                     $rating = (int) ($p['rating'] ?? 5);
-                    ?>
+                ?>
                 <article class="product-card" data-category="<?= e($cat) ?>"
                     data-id="<?= (int) ($p['id'] ?? 0) ?>"
                     data-name="<?= e($p['name']) ?>"
@@ -251,6 +278,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== TESTIMONIALS ========== -->
     <section class="section testimonials hex-bg" id="testimonials">
         <div class="container">
             <span class="section-tag">آراء العملاء</span>
@@ -277,6 +305,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== GALLERY ========== -->
     <section class="section gallery" id="gallery">
         <div class="container">
             <h2 class="section-title-center">معرض الصور</h2>
@@ -290,6 +319,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== TIPS ========== -->
     <section class="section tips" id="tips">
         <div class="container">
             <span class="section-tag">نصائح العسل</span>
@@ -307,6 +337,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </section>
 
+    <!-- ========== ORDER FORM ========== -->
     <section class="section order-section" id="order">
         <div class="container">
             <h2 class="section-title-center">اطلب عسلك الآن</h2>
@@ -331,32 +362,30 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                 <fieldset class="payment-fieldset">
                     <legend>طريقة الدفع *</legend>
                     <label class="radio-card">
-    <input type="radio" name="payment_method" value="bank_transfer" required>
-    <span>الدفع عبر CCP / BaridiMob</span>
-</label>
-                    <label class="radio-card"><input type="radio" name="payment_method" value="cod" required><span>الدفع عند الاستلام</span></label>
+                        <input type="radio" name="payment_method" value="bank_transfer" required>
+                        <span>الدفع عبر CCP / BaridiMob</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="payment_method" value="cod" required>
+                        <span>الدفع عند الاستلام</span>
+                    </label>
                 </fieldset>
                 <div class="bank-info" id="bankInfo" hidden>
                     <h3>معلومات التحويل</h3>
                     <p><strong>طريقة الدفع:</strong> CCP / BaridiMob</p>
-<p><strong>اسم صاحب الحساب:</strong> <?= e($bankHolder) ?></p>
-<p><strong>رقم CCP أو RIP:</strong> <code dir="ltr"><?= e($bankIban) ?></code></p>
-
-<label class="receipt-label">
-    إرفاق وصل الدفع (اختياري)
-    <input 
-        type="file" 
-        name="receipt" 
-        id="receipt" 
-        accept="image/jpeg,image/png,image/webp"
-    >
-</label>
+                    <p><strong>اسم صاحب الحساب:</strong> <?= e($bankHolder) ?></p>
+                    <p><strong>رقم CCP أو RIP:</strong> <code dir="ltr"><?= e($bankIban) ?></code></p>
+                    <label class="receipt-label">
+                        إرفاق وصل الدفع (اختياري)
+                        <input type="file" name="receipt" id="receipt" accept="image/jpeg,image/png,image/webp">
+                    </label>
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">إرسال الطلب</button>
             </form>
         </div>
     </section>
 
+    <!-- ========== FOOTER ========== -->
     <footer class="site-footer" id="footer">
         <div class="container footer-grid">
             <div class="footer-col">
@@ -388,12 +417,30 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         <p class="footer-copy">&copy; <?= date('Y') ?> D&amp;A Product</p>
     </footer>
 
-    <a href="https://wa.me/<?= e($waNum) ?>?text=<?= $waMsg ?>" class="whatsapp-float" target="_blank" rel="noopener" aria-label="واتساب"><svg viewBox="0 0 24 24" width="28" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+    <!-- ========== FLOATING WHATSAPP ========== -->
+    <a href="https://wa.me/<?= e($waNum) ?>?text=<?= $waMsg ?>" class="whatsapp-float" target="_blank" rel="noopener" aria-label="واتساب">
+        <svg viewBox="0 0 24 24" width="28" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
 
-    <div class="modal" id="productModal" hidden><div class="modal-backdrop" data-close></div><div class="modal-box"><button type="button" class="modal-close" data-close>&times;</button><img id="modalImg" src="" alt=""><h3 id="modalTitle"></h3><p id="modalDesc"></p><p class="modal-price" id="modalPrice"></p><button type="button" class="btn btn-primary" id="modalOrder">اطلب هذا المنتج</button></div></div>
-    <div class="lightbox" id="lightbox" hidden><button type="button" class="lightbox-close">&times;</button><img src="" alt="" id="lightboxImg"></div>
+    <!-- ========== MODALS ========== -->
+    <div class="modal" id="productModal" hidden>
+        <div class="modal-backdrop" data-close></div>
+        <div class="modal-box">
+            <button type="button" class="modal-close" data-close>&times;</button>
+            <img id="modalImg" src="" alt="">
+            <h3 id="modalTitle"></h3>
+            <p id="modalDesc"></p>
+            <p class="modal-price" id="modalPrice"></p>
+            <button type="button" class="btn btn-primary" id="modalOrder">اطلب هذا المنتج</button>
+        </div>
+    </div>
+    <div class="lightbox" id="lightbox" hidden>
+        <button type="button" class="lightbox-close">&times;</button>
+        <img src="" alt="" id="lightboxImg">
+    </div>
     <div class="toast" id="toast" hidden role="alert"></div>
 
+    <!-- ========== SCRIPTS ========== -->
     <script>window.DA_CSRF = <?= json_encode(csrf_token(), JSON_UNESCAPED_UNICODE) ?>;</script>
     <script src="<?= asset('assets/js/main.min.js') ?>" defer></script>
     <script>
