@@ -63,7 +63,12 @@ function db_sqlite_bootstrap(PDO $pdo): void
             setting_value TEXT NOT NULL
         )'
     );
-
+// Migration: quantity_available
+    try {
+        $pdo->exec('ALTER TABLE products ADD COLUMN quantity_available INTEGER NOT NULL DEFAULT 0');
+    } catch (Throwable) {
+        // العمود موجود مسبقاً
+    }
     $count = (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
     if ($count > 0) {
         return;

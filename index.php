@@ -85,6 +85,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                 <a href="#gallery">المعرض</a>
                 <a href="#tips">نصائح</a>
                 <a href="#order" class="nav-cta">اطلب الآن</a>
+                <button id="installAppBtn" hidden style="background:#c8860a;color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:14px;font-family:inherit;">📲 تثبيت التطبيق</button>
             </nav>
         </div>
     </header>
@@ -199,7 +200,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
             <span class="featured-badge">منتج الشهر</span>
             <h2><?= e($featured['name']) ?></h2>
             <p><?= e(mb_substr($featured['description'], 0, 120)) ?>…</p>
-            <p class="featured-price"><s><?= number_format((float) $featured['price'] * 1.15, 0) ?></s> <?= number_format((float) $featured['price'], 0) ?> ر.س</p>
+            <p class="featured-price"><s><?= number_format((float) $featured['price'] * 1.15, 0) ?></s> <?= number_format((float) $featured['price'], 0) ?> دج</p>
             <p class="featured-discount">خصم 15% لمدة محدودة</p>
             <div class="countdown" id="countdown" data-hours="72"></div>
             <button type="button" class="btn btn-primary btn-lg order-product-btn" data-product="<?= e($featured['name']) ?>" data-price="<?= e((string) $featured['price']) ?>">اطلب الآن</button>
@@ -214,7 +215,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
             <div class="filter-bar">
                 <button type="button" class="filter-btn active" data-filter="all">الكل</button>
                 <button type="button" class="filter-btn" data-filter="sidr">عسل السدر</button>
-                <button type="button" class="filter-btn" data-filter="talh">عسل زهرة البرتقال</button>
+               <button type="button" class="filter-btn" data-filter="talh">عسل الطلح</button>
                 <button type="button" class="filter-btn" data-filter="flowers">عسل الزهور</button>
                 <button type="button" class="filter-btn" data-filter="comb">عسل الشهد</button>
             </div>
@@ -238,7 +239,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                         <div class="stars" aria-label="تقييم <?= $rating ?>"><?= str_repeat('★', $rating) . str_repeat('☆', 5 - $rating) ?></div>
                         <h3><?= e($p['name']) ?></h3>
                         <p class="product-desc"><?= e(mb_substr($p['description'], 0, 70)) ?>…</p>
-                        <p class="product-price"><?= number_format((float) $p['price'], 0) ?> <span>ر.س</span></p>
+                        <p class="product-price"><?= number_format((float) $p['price'], 0) ?> <span>دج</span></p>
                         <div class="product-actions">
                             <button type="button" class="btn btn-ghost quick-view-btn">تفاصيل سريعة</button>
                             <button type="button" class="btn btn-secondary order-product-btn" data-product="<?= e($p['name']) ?>" data-price="<?= e((string) $p['price']) ?>">اطلب</button>
@@ -319,13 +320,13 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                         <select id="product_name" name="product_name" required>
                             <option value="">اختر المنتج</option>
                             <?php foreach ($products as $p): ?>
-                            <option value="<?= e($p['name']) ?>" data-price="<?= e((string) $p['price']) ?>"><?= e($p['name']) ?> – <?= number_format((float) $p['price'], 0) ?> ر.س</option>
+                            <option value="<?= e($p['name']) ?>" data-price="<?= e((string) $p['price']) ?>"><?= e($p['name']) ?> – <?= number_format((float) $p['price'], 0) ?> دج</option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div><label for="quantity">الكمية *</label><input type="number" id="quantity" name="quantity" min="1" max="99" value="1" required></div>
                 </div>
-                <p class="order-total" id="orderTotal">الإجمالي: <strong>0</strong> ر.س</p>
+                <p class="order-total" id="orderTotal">الإجمالي: <strong>0</strong> دج</p>
                 <div class="form-row"><label for="notes">ملاحظات</label><textarea id="notes" name="notes" rows="2"></textarea></div>
                 <fieldset class="payment-fieldset">
                     <legend>طريقة الدفع *</legend>
@@ -395,5 +396,15 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
 
     <script>window.DA_CSRF = <?= json_encode(csrf_token(), JSON_UNESCAPED_UNICODE) ?>;</script>
     <script src="<?= asset('assets/js/main.min.js') ?>" defer></script>
+    <script>
+    (function(){
+      var deferredPrompt=null;
+      var btn=document.getElementById("installAppBtn");
+      window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredPrompt=e;if(btn)btn.hidden=false;});
+      if(btn){btn.addEventListener("click",function(){if(!deferredPrompt)return;deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;btn.hidden=true;});});}
+      window.addEventListener("appinstalled",function(){if(btn)btn.hidden=true;});
+    })();
+    </script>
+    <?php pwa_register_script(); ?>
 </body>
 </html>

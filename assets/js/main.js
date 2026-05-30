@@ -290,3 +290,30 @@
     });
   }
 })();
+
+/* PWA Install Button */
+(function () {
+  var deferredPrompt = null;
+  var installBtn = document.getElementById("installAppBtn");
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (installBtn) installBtn.hidden = false;
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener("click", function () {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function () {
+        deferredPrompt = null;
+        installBtn.hidden = true;
+      });
+    });
+  }
+
+  window.addEventListener("appinstalled", function () {
+    if (installBtn) installBtn.hidden = true;
+  });
+})();

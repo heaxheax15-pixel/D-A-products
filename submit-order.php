@@ -114,7 +114,8 @@ try {
     $pdo->beginTransaction();
 
     // Check current inventory with row lock
-    $checkStmt = $pdo->prepare('SELECT id, quantity_available FROM products WHERE name = ? FOR UPDATE');
+    $lock = db_driver() === 'mysql' ? ' FOR UPDATE' : '';
+$checkStmt = $pdo->prepare('SELECT id, quantity_available FROM products WHERE name = ?' . $lock);
     $checkStmt->execute([$product]);
     $productData = $checkStmt->fetch();
 
@@ -196,7 +197,7 @@ try {
 // SEND NOTIFICATION & SET RATE LIMIT
 // ============================================================================
 $wa = sprintf(
-    "طلب جديد من %s، رقم الهاتف: %s، العنوان: %s، المنتج: %s، الكمية: %d، الإجمالي: %.2f ر.س. طريقة الدفع: %s.",
+    "طلب جديد من %s، رقم الهاتف: %s، العنوان: %s، المنتج: %s، الكمية: %d، الإجمالي: %.2f دج. طريقة الدفع: %s.",
     $name, $phone, $address, $product, $quantity, $total, payment_label($payment)
 );
 if ($notes !== '') {

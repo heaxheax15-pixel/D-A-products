@@ -30,7 +30,7 @@ admin_header('لوحة القيادة', 'dashboard');
     <div class="stat-card"><span>إجمالي الطلبات</span><strong><?= $stats['total'] ?></strong></div>
     <div class="stat-card"><span>طلبات اليوم</span><strong><?= $stats['today'] ?></strong></div>
     <div class="stat-card"><span>قيد الانتظار</span><strong><?= $stats['pending'] ?></strong></div>
-    <div class="stat-card"><span>إجمالي المبيعات</span><strong><?= number_format($stats['revenue'], 0) ?> ر.س</strong></div>
+    <div class="stat-card"><span>إجمالي المبيعات</span><strong><?= number_format($stats['revenue'], 0) ?> دج</strong></div>
 </div>
 <h2 class="admin-subtitle">أحدث الطلبات</h2>
 <div class="admin-table-wrap">
@@ -44,7 +44,7 @@ admin_header('لوحة القيادة', 'dashboard');
                 <td><?= (int) $o['id'] ?></td>
                 <td><a href="tel:<?= e($o['customer_phone']) ?>"><?= e($o['customer_name']) ?></a></td>
                 <td><?= e($o['product_name']) ?> ×<?= (int) $o['quantity'] ?></td>
-                <td><?= number_format((float) $o['total_price'], 0) ?> ر.س</td>
+                <td><?= number_format((float) $o['total_price'], 0) ?> دج</td>
                 <td><?= e(status_label($o['status'])) ?></td>
             </tr>
         <?php endforeach; endif; ?>

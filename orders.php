@@ -88,7 +88,7 @@ admin_header('الطلبات', 'orders');
                 </td>
                 <td data-label="الهاتف"><?= e($o['customer_phone']) ?></td>
                 <td data-label="المنتج"><?= e($o['product_name']) ?> ×<?= (int) $o['quantity'] ?></td>
-                <td data-label="المبلغ"><?= number_format((float) $o['total_price'], 2) ?> ر.س</td>
+                <td data-label="المبلغ"><?= number_format((float) $o['total_price'], 2) ?> دج</td>
                 <td data-label="الدفع"><?= e(payment_label($o['payment_method'])) ?></td>
                 <td data-label="الحالة">
                     <form method="post">

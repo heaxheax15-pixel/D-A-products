@@ -121,7 +121,7 @@ admin_header($edit ? 'تعديل منتج' : 'إدارة المنتجات', 'pro
                 <?php foreach ($products as $p): if (empty($p['is_active']) && isset($p['is_active'])) continue; ?>
                     <tr>
                         <td><?= e($p['name']) ?></td>
-                        <td><?= number_format((float) $p['price'], 0) ?> ر.س</td>
+                        <td><?= number_format((float) $p['price'], 0) ?> دج</td>
                         <td><?= e(category_label($p['category'] ?? '')) ?></td>
                         <td>
                             <a href="?edit=<?= (int) $p['id'] ?>">تعديل</a>

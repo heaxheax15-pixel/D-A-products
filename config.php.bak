@@ -136,10 +136,8 @@ function db(): PDO
         ]);
     } catch (PDOException $e) {
         error_log('[D&A] MySQL unavailable, switching to SQLite: ' . $e->getMessage());
-        require_once __DIR__ . '/includes/db-sqlite.php';
-        $pdo = db_sqlite_connect();
     }
-    return $pdo;
+
 }
 
 function whatsapp_api_configured(): bool
