@@ -1,15 +1,14 @@
 {
-  "id": "da-admin-dashboard",
-  "name": "D&A Dashboard",
+  "id": "da-honey-shop",
+  "name": "D&A Product – عسل طبيعي",
   "short_name": "D&A",
-  "description": "لوحة تحكم متجر D&A Product – إدارة الطلبات والمنتجات",
-  "start_url": "login.php",
+  "description": "متجر D&A Product – عسل طبيعي 100% من مناحل جبلية",
+  "start_url": "index.php",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  
-  "theme_color": "#0a0a0a",
-  "background_color": "#0a0a0a",
+  "background_color": "#FEF6E3",
+  "theme_color": "#C4640A",
   "dir": "rtl",
   "lang": "ar",
   "icons": [
@@ -36,6 +35,23 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "اطلب الآن",
+      "url": "index.php#order",
+      "description": "اطلب عسلك مباشرة"
+    },
+    {
+      "name": "منتجاتنا",
+      "url": "index.php#products",
+      "description": "تصفح المنتجات"
+    },
+    {
+      "name": "لوحة التحكم",
+      "url": "login.php",
+      "description": "دخول الأدمن"
     }
   ]
 }
