@@ -4,9 +4,16 @@ declare(strict_types=1);
 // ============================================================================
 // FORCE ERROR REPORTING GLOBALLY - MUST BE FIRST
 // ============================================================================
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+$_localHost = explode(':', $_SERVER['HTTP_HOST'] ?? 'localhost')[0];
+$_isDev = str_starts_with($_localHost, '10.')
+       || str_starts_with($_localHost, '192.')
+       || str_starts_with($_localHost, '172.')
+       || in_array($_localHost, ['localhost', '127.0.0.1', '::1'], true);
+
+ini_set('display_errors', $_isDev ? '1' : '0');
+ini_set('display_startup_errors', $_isDev ? '1' : '0');
+error_reporting($_isDev ? E_ALL : 0);
+unset($_localHost, $_isDev);
 
 if (!defined('DA_APP')) {
     define('DA_APP', true);
@@ -66,10 +73,10 @@ if (session_status() === PHP_SESSION_NONE) {
         session_save_path($sessionDir);
     }
     session_start([
-        'cookie_httponly' => true,
-        'cookie_samesite' => 'Lax',
-        'cookie_secure' => false,
-    ]);
+    'cookie_httponly' => true,
+    'cookie_samesite' => 'Lax',
+    'cookie_secure'   => IS_LOCAL_DEV ? false : true,
+]);
 }
 
 // ============================================================================
@@ -85,6 +92,22 @@ require_once __DIR__ . '/settings.php';
 require_once __DIR__ . '/products.php';
 require_once __DIR__ . '/articles.php';
 require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/cart.php';
+require_once __DIR__ . '/login-attempts.php';
+require_once __DIR__ . '/migration.php';
+require_once __DIR__ . '/low-stock.php';
+
+// Auto-run migrations if needed (only once per session)
+$_migFlag = dirname(__DIR__) . '/storage/db_v2.migrated';
+if (!file_exists($_migFlag)) {
+    try {
+        migrate_orders_to_order_items();
+        file_put_contents($_migFlag, date('c'));
+    } catch (Throwable $e) {
+        error_log('[D&A] Migration error: ' . $e->getMessage());
+    }
+}
+unset($_migFlag);
 
 load_runtime_settings();
 

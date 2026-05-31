@@ -1,1 +1,1 @@
-csrf_token|s:64:"7b3f5dff07d851d04612f89781b270b8a0fcb471c0be2a212fc9b84c835b775a";
+csrf_token|s:64:"7b3f5dff07d851d04612f89781b270b8a0fcb471c0be2a212fc9b84c835b775a";cart|a:1:{i:2;a:4:{s:10:"product_id";i:2;s:8:"quantity";i:1;s:4:"name";s:34:"عسل زهرة البرتقالة";s:5:"price";s:6:"350.00";}}

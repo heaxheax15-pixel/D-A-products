@@ -138,7 +138,7 @@
       document.getElementById("modalImg").src = card.getAttribute("data-image");
       document.getElementById("modalTitle").textContent = card.getAttribute("data-name");
       document.getElementById("modalDesc").textContent = card.getAttribute("data-desc");
-      document.getElementById("modalPrice").textContent = card.getAttribute("data-price") + " ر.س";
+      document.getElementById("modalPrice").textContent = card.getAttribute("data-price") + "دج";
       document.getElementById("modalOrder").onclick = function () {
         productModal.hidden = true;
         scrollToOrder(card.getAttribute("data-name"));

@@ -24,8 +24,24 @@ try {
 } catch (Throwable $e) {
 }
 
+// Get low stock products
+$lowStockProducts = get_low_stock_products();
+
 admin_header('لوحة القيادة', 'dashboard');
 ?>
+
+<?php if (!empty($lowStockProducts)): ?>
+<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:16px;margin-bottom:20px;color:#856404;">
+    <strong style="display:block;margin-bottom:8px;">⚠️ تنبيه: منتجات بمخزون منخفض</strong>
+    <ul style="margin:8px 0;padding-left:20px;">
+    <?php foreach ($lowStockProducts as $p): ?>
+        <li><strong><?= e($p['name']) ?></strong> — المتوفر: <?= (int) $p['quantity_available'] ?> فقط</li>
+    <?php endforeach; ?>
+    </ul>
+    <a href="products-management.php" style="color:#856404;text-decoration:underline;font-size:0.9rem;">إدارة المنتجات →</a>
+</div>
+<?php endif; ?>
+
 <div class="stats-grid">
     <div class="stat-card"><span>إجمالي الطلبات</span><strong><?= $stats['total'] ?></strong></div>
     <div class="stat-card"><span>طلبات اليوم</span><strong><?= $stats['today'] ?></strong></div>
@@ -43,7 +59,27 @@ admin_header('لوحة القيادة', 'dashboard');
             <tr>
                 <td><?= (int) $o['id'] ?></td>
                 <td><a href="tel:<?= e($o['customer_phone']) ?>"><?= e($o['customer_name']) ?></a></td>
-                <td><?= e($o['product_name']) ?> ×<?= (int) $o['quantity'] ?></td>
+                <td>
+                    <?php
+                    // Get product names from order_items if available
+                    try {
+                        $items = db()->prepare('
+                            SELECT oi.quantity, p.name
+                            FROM order_items oi
+                            JOIN products p ON oi.product_id = p.id
+                            WHERE oi.order_id = ?
+                        ')->execute([(int) $o['id']])->fetchAll();
+                        if (!empty($items)) {
+                            echo implode(', ', array_map(function($item) {
+                                return e($item['name']) . ' ×' . (int) $item['quantity'];
+                            }, $items));
+                        }
+                    } catch (Throwable) {
+                        // Fallback if order_items doesn't exist yet (old data)
+                        echo 'مشمولات الطلب';
+                    }
+                    ?>
+                </td>
                 <td><?= number_format((float) $o['total_price'], 0) ?> دج</td>
                 <td><?= e(status_label($o['status'])) ?></td>
             </tr>

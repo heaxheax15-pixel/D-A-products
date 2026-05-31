@@ -30,15 +30,32 @@ function db_sqlite_bootstrap(PDO $pdo): void
             customer_name TEXT NOT NULL,
             customer_phone TEXT NOT NULL,
             customer_address TEXT NOT NULL,
-            notes TEXT NULL,
-            product_name TEXT NOT NULL,
-            quantity INTEGER NOT NULL DEFAULT 1,
             total_price REAL NOT NULL,
             payment_method TEXT NOT NULL,
             receipt_path TEXT NULL,
             status TEXT NOT NULL DEFAULT \'pending\',
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+            notes TEXT NULL,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            updated_at TEXT DEFAULT CURRENT_TIMESTAMP
         )'
+    );
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS order_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            order_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL,
+            quantity INTEGER NOT NULL DEFAULT 1,
+            unit_price REAL NOT NULL,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+            FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+        )'
+    );
+    $pdo->exec(
+        'CREATE INDEX IF NOT EXISTS idx_order_items_order_id ON order_items(order_id)'
+    );
+    $pdo->exec(
+        'CREATE INDEX IF NOT EXISTS idx_order_items_product_id ON order_items(product_id)'
     );
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS products (
@@ -63,12 +80,21 @@ function db_sqlite_bootstrap(PDO $pdo): void
             setting_value TEXT NOT NULL
         )'
     );
-// Migration: quantity_available
-    try {
-        $pdo->exec('ALTER TABLE products ADD COLUMN quantity_available INTEGER NOT NULL DEFAULT 0');
-    } catch (Throwable) {
-        // العمود موجود مسبقاً
-    }
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS login_attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip_address TEXT NOT NULL UNIQUE,
+            attempts INTEGER NOT NULL DEFAULT 1,
+            last_attempt TEXT DEFAULT CURRENT_TIMESTAMP,
+            blocked_until TEXT NULL
+        )'
+    );
+    $pdo->exec(
+        'CREATE INDEX IF NOT EXISTS idx_login_attempts_ip ON login_attempts(ip_address)'
+    );
+    // Migration check: ensure old orders table is migrated if needed
+    // This will be handled by migration.php script
+    
     $count = (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
     if ($count > 0) {
         return;
@@ -97,6 +123,8 @@ function db_sqlite_bootstrap(PDO $pdo): void
         ['whatsapp_greeting', 'مرحباً، أريد الاستفسار عن العسل'],
         ['contact_instagram', 'https://instagram.com/d_a_product'],
         ['contact_tiktok', 'https://tiktok.com/@asma.hacini'],
+        ['low_stock_threshold', '10'],
+        ['enable_whatsapp_notifications', '1'],
     ];
     $stmt = $pdo->prepare('INSERT OR IGNORE INTO settings (setting_key, setting_value) VALUES (?, ?)');
     foreach ($settings as $s) {

@@ -15,12 +15,36 @@ if (!empty($_GET['export']) && $_GET['export'] === 'csv') {
     header('Content-Disposition: attachment; filename="orders_' . date('Y-m-d') . '.csv"');
     echo "\xEF\xBB\xBF";
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['ID', 'الاسم', 'الهاتف', 'العنوان', 'المنتج', 'الكمية', 'الإجمالي', 'الدفع', 'الحالة', 'التاريخ']);
+    fputcsv($out, ['ID', 'الاسم', 'الهاتف', 'العنوان', 'المنتجات', 'الكمية', 'الإجمالي', 'الدفع', 'الحالة', 'التاريخ']);
     $sql = 'SELECT * FROM orders ORDER BY created_at DESC';
     foreach (db()->query($sql) as $row) {
+        // Get items for this order
+        $items = [];
+        $totalQty = 0;
+        try {
+            $itemStmt = db()->prepare('
+                SELECT p.name, oi.quantity
+                FROM order_items oi
+                JOIN products p ON oi.product_id = p.id
+                WHERE oi.order_id = ?
+            ');
+            $itemStmt->execute([(int) $row['id']]);
+            $itemResults = $itemStmt->fetchAll();
+            foreach ($itemResults as $item) {
+                $items[] = $item['name'] . ' ×' . (int) $item['quantity'];
+                $totalQty += (int) $item['quantity'];
+            }
+        } catch (Throwable) {
+            // Fallback to old format
+            if (!empty($row['product_name'])) {
+                $items[] = $row['product_name'] . ' ×' . (int) ($row['quantity'] ?? 1);
+                $totalQty = (int) ($row['quantity'] ?? 1);
+            }
+        }
+        
         fputcsv($out, [
             $row['id'], $row['customer_name'], $row['customer_phone'], $row['customer_address'],
-            $row['product_name'], $row['quantity'], $row['total_price'],
+            implode('; ', $items), $totalQty, $row['total_price'],
             payment_label($row['payment_method']), status_label($row['status']), $row['created_at'],
         ]);
     }
@@ -87,7 +111,30 @@ admin_header('الطلبات', 'orders');
                     <?php endif; ?>
                 </td>
                 <td data-label="الهاتف"><?= e($o['customer_phone']) ?></td>
-                <td data-label="المنتج"><?= e($o['product_name']) ?> ×<?= (int) $o['quantity'] ?></td>
+                <td data-label="المنتج">
+                    <?php
+                    // Try to get items from order_items table
+                    try {
+                        $items = db()->prepare('
+                            SELECT oi.quantity, p.name
+                            FROM order_items oi
+                            JOIN products p ON oi.product_id = p.id
+                            WHERE oi.order_id = ?
+                        ')->execute([(int) $o['id']])->fetchAll();
+                        if (!empty($items)) {
+                            echo implode(', ', array_map(function($item) {
+                                return e($item['name']) . ' ×' . (int) $item['quantity'];
+                            }, $items));
+                        } else {
+                            // Fallback to old format if no items found
+                            echo e($o['product_name'] ?? 'مشمولات الطلب') . ' ×' . (int) ($o['quantity'] ?? 1);
+                        }
+                    } catch (Throwable) {
+                        // Fallback if order_items table doesn't exist
+                        echo e($o['product_name'] ?? 'مشمولات الطلب') . ' ×' . (int) ($o['quantity'] ?? 1);
+                    }
+                    ?>
+                </td>
                 <td data-label="المبلغ"><?= number_format((float) $o['total_price'], 2) ?> دج</td>
                 <td data-label="الدفع"><?= e(payment_label($o['payment_method'])) ?></td>
                 <td data-label="الحالة">

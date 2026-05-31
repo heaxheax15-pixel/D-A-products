@@ -12,12 +12,24 @@ if (admin_logged_in()) {
 }
 
 $error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$clientIp = get_client_ip();
+
+// Check if IP is blocked
+if (is_login_blocked($clientIp)) {
+    $remaining = get_block_remaining_seconds($clientIp);
+    $error = sprintf('محاولات دخول كثيرة جداً. حاول بعد %d دقائق', ceil($remaining / 60));
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
     $key = trim((string) ($_POST['secret_key'] ?? ''));
+    
     if (admin_login($key)) {
+        clear_login_attempts($clientIp);
         header('Location: dashboard.php');
         exit;
     }
+    
+    record_failed_login($clientIp);
     $error = 'مفتاح الدخول غير صحيح.';
 }
 ?>
