@@ -1,0 +1,30 @@
+# Environment
+.env
+.env.local
+
+# Storage
+storage/sessions/
+storage/*.sqlite
+
+# Uploads (لا ترفعها في Git)
+uploads/products/
+uploads/receipts/
+
+# Backups
+*.bak
+*.backup
+
+# Cache
+*.min.css.map
+*.min.js.map
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
