@@ -106,7 +106,7 @@ php -S localhost:8000
 
 - **Store:** http://localhost:8000
 - **Admin:** http://localhost:8000/login.php
-- **Credentials:** Key = `A&DBOUTIQUE21` (from .env)
+- **Credentials:** Key = `wedothebesthonyhere` (from .env)
 
 ---
 
