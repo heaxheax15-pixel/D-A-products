@@ -63,6 +63,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
     </script>
 </head>
 <body>
+    <a class="skip-link" href="#main-content">تخطي إلى المحتوى</a>
     <!-- ========== HEADER ========== -->
     <header class="site-header" id="siteHeader">
         <div class="container header-inner">
@@ -76,7 +77,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
             <button class="nav-toggle" type="button" aria-label="القائمة" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
-            <nav class="main-nav" id="mainNav">
+            <nav class="main-nav" id="mainNav" aria-label="القائمة الرئيسية">
                 <a href="#why">لماذا نحن</a>
                 <a href="#quality">الجودة</a>
                 <a href="#about">عن العسل</a>
@@ -92,6 +93,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         </div>
     </header>
 
+    <main id="main-content">
     <!-- ========== HERO ========== -->
     <section class="hero" id="top">
         <div class="hero-bg zoom-bg" style="background-image:url(images/pro1.webp)"></div>
@@ -105,6 +107,12 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                 <a href="#order" class="btn btn-primary btn-lg">اطلب الآن</a>
                 <a href="#story" class="btn btn-outline btn-lg">تعرف على قصتنا</a>
             </div>
+            <div class="trust-strip" aria-label="مزايا D&A Product">
+                <div class="trust-item"><span>✓</span> عسل طبيعي 100%</div>
+                <div class="trust-item"><span>✓</span> تعبئة آمنة</div>
+                <div class="trust-item"><span>✓</span> توصيل سريع</div>
+                <div class="trust-item"><span>✓</span> دعم واتساب مباشر</div>
+            </div>
         </div>
     </section>
 
@@ -113,6 +121,11 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
         <div class="container">
             <span class="section-tag">لماذا D&amp;A؟</span>
             <h2 class="section-title-center">تميزنا في كل قطرة</h2>
+            <div class="proof-banner">
+                <div class="proof-item"><strong>4.9/5</strong><span>تقييم العملاء</span></div>
+                <div class="proof-item"><strong>2,400+</strong><span>طلب تم توصيله</span></div>
+                <div class="proof-item"><strong>24/7</strong><span>دعم واتساب</span></div>
+            </div>
             <div class="features-grid">
                 <div class="glass-card reveal">
                     <div class="feat-icon"><svg viewBox="0 0 48 48" width="40"><path fill="#FFAA00" d="M24 4l4 10h10l-8 7 3 10-9-6-9 6 3-10-8-7h10z"/></svg></div>
@@ -133,6 +146,19 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                     <div class="feat-icon">🚚</div>
                     <h3>توصيل سريع</h3>
                     <p>تغليف آمن ووصول لباب منزلك.</p>
+                </div>
+            </div>
+
+            <div class="proof-panel reveal">
+                <div class="proof-panel-copy">
+                    <span class="section-tag">لماذا يختار العملاء D&amp;A؟</span>
+                    <h3>أكثر من مجرد عسل؛ تجربة شراء موثوقة ومباشرة.</h3>
+                    <p>نختار أفضل المناحل، نحافظ على الجودة في كل دفعة، ونبني علاقة وثوق مع العميل من أول رسالة حتى وصول الطلب.</p>
+                </div>
+                <div class="proof-panel-points">
+                    <div><strong>تعبئة بعناية</strong><span>حفظ الجودة والنقاوة</span></div>
+                    <div><strong>خدمة سريعة</strong><span>رد مباشر عبر واتساب</span></div>
+                    <div><strong>عرض واضح</strong><span>سعر ثابت دون تعقيد</span></div>
                 </div>
             </div>
         </div>
@@ -246,6 +272,20 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                 <button type="button" class="filter-btn" data-filter="flowers">عسل الزهور</button>
                 <button type="button" class="filter-btn" data-filter="comb">عسل الشهد</button>
             </div>
+            <div class="product-spotlight">
+                <div>
+                    <span>توصيل سريع</span>
+                    <strong>أكثر من 2,400 طلب تم توصيله</strong>
+                </div>
+                <div>
+                    <span>جودة موثوقة</span>
+                    <strong>عسل طبيعي 100% وبدون إضافات</strong>
+                </div>
+                <div>
+                    <span>دعم مباشر</span>
+                    <strong>رد خلال دقائق على واتساب</strong>
+                </div>
+            </div>
             <div class="products-grid" id="productsGrid">
                 <?php foreach ($products as $p):
                     $cat = $p['category'] ?? 'flowers';
@@ -341,8 +381,12 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
     <section class="section order-section" id="order">
         <div class="container">
             <h2 class="section-title-center">اطلب عسلك الآن</h2>
-            <form class="order-form" id="orderForm" action="submit-order.php" method="post" enctype="multipart/form-data" novalidate>
+            <form class="order-form" id="orderForm" action="submit-order.php" method="post" enctype="multipart/form-data" novalidate aria-label="نموذج الطلب">
                 <?= csrf_field() ?>
+                <div class="order-form-header">
+                    <span>طلبك سهل ومباشر</span>
+                    <strong id="selectedProductSummary">اختر منتجك المفضل</strong>
+                </div>
                 <div class="form-row"><label for="customer_name">الاسم الكامل *</label><input type="text" id="customer_name" name="customer_name" required autocomplete="name"></div>
                 <div class="form-row"><label for="customer_phone">رقم الهاتف *</label><input type="tel" id="customer_phone" name="customer_phone" required pattern="<?= e(algerian_phone_pattern_html()) ?>" placeholder="05xxxxxxxx" dir="ltr" title="رقم جزائري: 10 أرقام تبدأ بـ 05 أو 06 أو 07"></div>
                 <div class="form-row"><label for="customer_address">العنوان *</label><textarea id="customer_address" name="customer_address" required rows="3"></textarea></div>
@@ -357,7 +401,10 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
                     </div>
                     <div><label for="quantity">الكمية *</label><input type="number" id="quantity" name="quantity" min="1" max="99" value="1" required></div>
                 </div>
-                <p class="order-total" id="orderTotal">الإجمالي: <strong>0</strong> دج</p>
+                <div class="order-total-wrap">
+                    <p class="order-total" id="orderTotal">الإجمالي: <strong>0</strong> دج</p>
+                    <p class="order-note">سيتم تأكيد الطلب مباشرة عبر واتساب بعد إرسال النموذج.</p>
+                </div>
                 <div class="form-row"><label for="notes">ملاحظات</label><textarea id="notes" name="notes" rows="2"></textarea></div>
                 <fieldset class="payment-fieldset">
                     <legend>طريقة الدفع *</legend>
@@ -386,6 +433,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
     </section>
 
     <!-- ========== FOOTER ========== -->
+    </main>
     <footer class="site-footer" id="footer">
         <div class="container footer-grid">
             <div class="footer-col">
@@ -408,7 +456,7 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
             </div>
             <div class="footer-col">
                 <h4>النشرة البريدية</h4>
-                <form id="newsletterForm" class="newsletter-form">
+                <form id="newsletterForm" class="newsletter-form" aria-label="النشرة البريدية">
                     <input type="email" name="email" placeholder="بريدك الإلكتروني" required>
                     <button type="submit">اشترك</button>
                 </form>

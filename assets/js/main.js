@@ -101,10 +101,23 @@
     if (!productSelect || !productSelect.selectedOptions[0]) return 0;
     return parseFloat(productSelect.selectedOptions[0].dataset.price || "0", 10);
   }
+  function updateSelectedSummary() {
+    var selected = productSelect && productSelect.selectedOptions && productSelect.selectedOptions[0];
+    var summary = document.getElementById("selectedProductSummary");
+    if (!summary) return;
+    if (!selected || !selected.value) {
+      summary.textContent = "اختر منتجك المفضل";
+      return;
+    }
+    var qty = parseInt(quantityInput && quantityInput.value, 10) || 1;
+    summary.textContent = selected.value + " • " + qty + " وحدة";
+  }
   function updateTotal() {
     if (!orderTotal) return;
     var qty = parseInt(quantityInput && quantityInput.value, 10) || 1;
-    orderTotal.innerHTML = "الإجمالي: <strong>" + (getUnitPrice() * qty).toFixed(0) + "</strong> ر.س";
+    var total = (getUnitPrice() * qty).toFixed(0);
+    orderTotal.innerHTML = "الإجمالي: <strong>" + total + "</strong> دج";
+    updateSelectedSummary();
   }
   if (productSelect) productSelect.addEventListener("change", updateTotal);
   if (quantityInput) quantityInput.addEventListener("input", updateTotal);
