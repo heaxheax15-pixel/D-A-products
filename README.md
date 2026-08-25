@@ -212,7 +212,7 @@ DB_USER=da_shop
 DB_PASS=da_honey_local
 
 # Admin
-ADMIN_SECRET_KEY=A&DBOUTIQUE21
+ADMIN_SECRET_KEY=
 
 # WhatsApp (optional)
 WHATSAPP_ENABLED=false
