@@ -106,7 +106,7 @@ php -S localhost:8000
 
 - **Store:** http://localhost:8000
 - **Admin:** http://localhost:8000/login.php
-- **Credentials:** Key = `A&DBOUTIQUE21` (from .env)
+- **Credentials:** Key = `wedothebesthonyhere` (from .env)
 
 ---
 
@@ -212,7 +212,7 @@ DB_USER=da_shop
 DB_PASS=da_honey_local
 
 # Admin
-ADMIN_SECRET_KEY=A&DBOUTIQUE21
+ADMIN_SECRET_KEY=
 
 # WhatsApp (optional)
 WHATSAPP_ENABLED=false
