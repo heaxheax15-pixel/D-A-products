@@ -31,7 +31,7 @@ a{text-decoration:none}
 
 /* ── HEADER ── */
 .site-header{position:fixed;inset-block-start:0;inset-inline:0;z-index:900;padding:18px 0;transition:var(--tr)}
-.site-header.scrolled{background:rgba(26,10,1,.94);backdrop-filter:blur(16px);padding:10px 0;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.site-header.is-scrolled,.site-header.scrolled{background:rgba(26,10,1,.94);backdrop-filter:blur(16px);padding:10px 0;box-shadow:0 2px 20px rgba(0,0,0,.3)}
 .header-bg-logo{display:none}
 .header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .logo{display:flex;align-items:center;gap:10px;color:var(--white)}
@@ -174,6 +174,7 @@ section#story   .parallax-bg{background-image:url(images/pro1.webp)}
 .filter-btn.active,.filter-btn:hover{background:var(--amber);color:#fff;border-color:var(--amber);box-shadow:0 4px 16px rgba(196,100,10,.3)}
 .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:28px;text-align:right}
 .product-card{background:var(--white);border-radius:var(--r-md);overflow:hidden;border:1px solid var(--cream-dk);box-shadow:var(--sh-sm);transition:var(--tr);position:relative}
+.product-card.hidden{display:none}
 .product-card:hover{transform:translateY(-8px);box-shadow:var(--sh-lg)}
 .badge-bestseller{position:absolute;top:14px;right:14px;z-index:2;background:var(--gold);color:var(--ink);padding:3px 12px;border-radius:50px;font-size:.78rem;font-weight:800}
 .product-img-wrap{height:230px;overflow:hidden;background:var(--cream-mid)}
@@ -307,7 +308,7 @@ section#story   .parallax-bg{background-image:url(images/pro1.webp)}
 @media(max-width:900px){
   .nav-toggle{display:flex}
   .main-nav{position:fixed;top:0;right:-100%;width:268px;height:100vh;background:var(--ink);flex-direction:column;align-items:stretch;padding:80px 20px 40px;transition:right .4s var(--ease);gap:3px;overflow-y:auto;z-index:1000;box-shadow:-8px 0 40px rgba(0,0,0,.35)}
-  .main-nav.open{right:0}
+  .main-nav.is-open,.main-nav.open{right:0}
   .main-nav a{padding:13px 18px;border-radius:var(--r-sm);font-size:.98rem}
   .section-grid{grid-template-columns:1fr;gap:36px}
   .form-row-2{grid-template-columns:1fr}
