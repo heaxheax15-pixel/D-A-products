@@ -1,0 +1,26 @@
+server {
+    listen 80;
+    server_name shop.example.com;
+    root /var/www/d-a-products;
+    index index.php;
+
+    location /storage/ {
+        deny all;
+        return 404;
+    }
+
+    location ~* ^/uploads/.*\.php$ {
+        deny all;
+        return 404;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+    }
+}

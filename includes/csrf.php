@@ -29,7 +29,12 @@ function csrf_require(): void
         return;
     }
     $_SESSION['admin_flash_error'] = 'انتهت صلاحية الجلسة. أعد تحميل الصفحة وحاول مجدداً.';
-    $target = $_SERVER['HTTP_REFERER'] ?? 'dashboard.php';
+    $target = 'dashboard.php';
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
+    $refererPath = parse_url($referer, PHP_URL_PATH);
+    if (is_string($refererPath) && str_starts_with($refererPath, '/') && !str_starts_with($refererPath, '//')) {
+        $target = $refererPath;
+    }
     header('Location: ' . $target);
     exit;
 }

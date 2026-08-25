@@ -4,11 +4,8 @@ declare(strict_types=1);
 // ============================================================================
 // FORCE ERROR REPORTING GLOBALLY - MUST BE FIRST
 // ============================================================================
-$_localHost = explode(':', $_SERVER['HTTP_HOST'] ?? 'localhost')[0];
-$_isDev = str_starts_with($_localHost, '10.')
-       || str_starts_with($_localHost, '192.')
-       || str_starts_with($_localHost, '172.')
-       || in_array($_localHost, ['localhost', '127.0.0.1', '::1'], true);
+require_once dirname(__DIR__) . '/config.php';
+$_isDev = APP_ENV === 'development';
 
 ini_set('display_errors', $_isDev ? '1' : '0');
 ini_set('display_startup_errors', $_isDev ? '1' : '0');
@@ -19,22 +16,10 @@ if (!defined('DA_APP')) {
     define('DA_APP', true);
 }
 
-require_once dirname(__DIR__) . '/config.php';
-
 // ============================================================================
 // DEVELOPMENT/LOCAL DETECTION (checks for local IPs, localhost, and debug flag)
 // ============================================================================
-$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$hostParts = explode(':', $host)[0]; // Remove port if present
-
-function is_local_ip(string $ip): bool {
-    return str_starts_with($ip, '10.') ||
-           str_starts_with($ip, '192.') ||
-           str_starts_with($ip, '172.') ||
-           in_array($ip, ['localhost', '127.0.0.1', '::1'], true);
-}
-
-define('IS_LOCAL_DEV', is_local_ip($hostParts));
+define('IS_LOCAL_DEV', APP_ENV === 'development');
 
 if (!headers_sent()) {
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
@@ -47,18 +32,24 @@ if (!headers_sent()) {
 // ============================================================================
 function enforce_https(): void
 {
-    // Immediately return if local/development environment
-    $hostParts = explode(':', $_SERVER['HTTP_HOST'] ?? 'localhost')[0];
-    if (is_local_ip($hostParts)) {
+    if (IS_LOCAL_DEV) {
         return;
     }
 
     // Only enforce on production domains
+    $trustedProxies = array_filter(array_map('trim', explode(',', TRUSTED_PROXY_IPS)));
+    $remoteAddress = $_SERVER['REMOTE_ADDR'] ?? '';
+    $isTrustedProxy = in_array($remoteAddress, $trustedProxies, true);
     $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
-                (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+                ($isTrustedProxy && ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
 
     if (!$isSecure) {
-        $url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $baseUrl = rtrim(SITE_URL, '/');
+        if ($baseUrl === '') {
+            http_response_code(500);
+            exit('HTTPS configuration is incomplete.');
+        }
+        $url = preg_replace('#^http://#', 'https://', $baseUrl) . ($_SERVER['REQUEST_URI'] ?? '/');
         header('Location: ' . $url, true, 301);
         exit;
     }

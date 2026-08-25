@@ -70,6 +70,7 @@ load_env_file();
 // APPLICATION CONSTANTS (from env or defaults)
 // ============================================================================
 define('APP_VERSION', env('APP_VERSION', '2.0.0'));
+define('APP_ENV', strtolower((string) env('APP_ENV', 'production')));
 /** true = عرض الأخطاء (تطوير محلي فقط). false = إنتاج. */
 define('APP_DEBUG', (bool) filter_var(env('APP_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN));
 define('APP_ROOT', __DIR__);
@@ -84,6 +85,7 @@ define('DB_NAME', env('DB_NAME', 'da_honey_shop'));
 define('DB_USER', env('DB_USER', 'da_shop'));
 define('DB_PASS', env('DB_PASS', 'da_honey_local'));
 define('DB_CHARSET', env('DB_CHARSET', 'utf8mb4'));
+define('TRUSTED_PROXY_IPS', env('TRUSTED_PROXY_IPS', ''));
 
 // Admin Authentication (from .env, will be hashed in auth.php)
 define('ADMIN_SECRET_KEY', env('ADMIN_SECRET_KEY'));
@@ -135,6 +137,11 @@ function db(): PDO
             PDO::ATTR_EMULATE_PREPARES => false,
         ]);
     } catch (PDOException $e) {
+        if (APP_ENV === 'production') {
+            error_log('[D&A] MySQL connection failed in production: ' . $e->getMessage());
+            throw $e;
+        }
+
         error_log('[D&A] MySQL unavailable, switching to SQLite: ' . $e->getMessage());
         require_once __DIR__ . '/includes/db-sqlite.php';
         $pdo = db_sqlite_connect();

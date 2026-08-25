@@ -11,25 +11,23 @@ declare(strict_types=1);
  */
 function get_client_ip(): string
 {
-    // Check for IP from shared internet
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    }
-    // Check for IP passed from proxy
-    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-    }
-    // Check for remote address
-    else {
-        $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    $remoteAddress = $_SERVER['REMOTE_ADDR'] ?? '';
+    if (!filter_var($remoteAddress, FILTER_VALIDATE_IP)) {
+        return 'unknown';
     }
 
-    // Validate IP
-    if (!filter_var($ip, FILTER_VALIDATE_IP)) {
-        return '127.0.0.1';
+    // Forwarded headers are trusted only when the direct peer is configured.
+    $trustedProxies = array_filter(array_map('trim', explode(',', env('TRUSTED_PROXY_IPS', ''))));
+    if (in_array($remoteAddress, $trustedProxies, true) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        foreach (explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']) as $forwardedIp) {
+            $forwardedIp = trim($forwardedIp);
+            if (filter_var($forwardedIp, FILTER_VALIDATE_IP)) {
+                return $forwardedIp;
+            }
+        }
     }
 
-    return $ip;
+    return $remoteAddress;
 }
 
 /**

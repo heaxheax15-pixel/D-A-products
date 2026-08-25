@@ -48,6 +48,12 @@ function admin_require_login(): void
  */
 function admin_login(string $plainTextPassword): bool
 {
+    // Never bootstrap an administrator account without a configured secret.
+    if (!is_string(ADMIN_SECRET_KEY) || trim(ADMIN_SECRET_KEY) === '') {
+        error_log('[D&A] ADMIN_SECRET_KEY is missing or empty. Admin login disabled.');
+        return false;
+    }
+
     // Try to get stored hash
     $storedHash = get_admin_password_hash();
 
@@ -76,18 +82,6 @@ function admin_login(string $plainTextPassword): bool
 function admin_logout(): void
 {
     unset($_SESSION['da_admin'], $_SESSION['da_admin_time']);
-}
-
-/**
- * Support for legacy ?key= URL parameter (for backward compatibility)
- * Note: This should be removed after migration period
- */
-function admin_try_legacy_key(): void
-{
-    $key = (string) ($_GET['key'] ?? '');
-    if ($key !== '' && hash_equals(ADMIN_SECRET_KEY, $key)) {
-        admin_login($key);
-    }
 }
 
 /**

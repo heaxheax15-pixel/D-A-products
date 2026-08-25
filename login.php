@@ -5,7 +5,6 @@ define('DA_APP', true);
 require_once __DIR__ . '/includes/bootstrap.php';
 require_once __DIR__ . '/includes/pwa.php';
 
-admin_try_legacy_key();
 if (admin_logged_in()) {
     header('Location: dashboard.php');
     exit;
@@ -21,9 +20,13 @@ if (is_login_blocked($clientIp)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
+    if (!csrf_verify()) {
+        $error = 'انتهت صلاحية الجلسة. أعد تحميل الصفحة وحاول مجدداً.';
+    }
+
     $key = trim((string) ($_POST['secret_key'] ?? ''));
-    
-    if (admin_login($key)) {
+
+    if ($error === '' && admin_login($key)) {
         clear_login_attempts($clientIp);
         header('Location: dashboard.php');
         exit;
@@ -49,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
         <h1>لوحة التحكم</h1>
         <p>أدخل مفتاح الأمان للمتابعة</p>
         <?php if ($error): ?><div class="login-error"><?= e($error) ?></div><?php endif; ?>
+        <?= csrf_field() ?>
         <input type="password" name="secret_key" placeholder="مفتاح الأمان" required autofocus autocomplete="current-password">
         <button type="submit" class="btn-admin-primary">دخول</button>
         <button type="button" class="btn-install-pwa login-install" id="installPwaBtn" hidden>📲 تثبيت التطبيق على الجوال</button>
