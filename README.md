@@ -180,22 +180,23 @@ D&A products/
 
 ---
 
-## 🔐 Security Audit Results
+## 🔐 Security Notes
 
-**Overall Score:** 9.2/10 ⭐
+آخر مراجعة يدوية للكود: `2026-08-25` (commit `HEAD`). لا يوجد تقييم رقمي إجمالي — كل بند أدناه يُشير إلى موضعه في الكود ليتحقق منه القارئ مباشرة.
 
-| Feature | Status |
-|---------|--------|
-| SQL Injection | ✅ Protected |
-| XSS Attacks | ✅ Protected |
-| CSRF Attacks | ✅ Token validated |
-| Password Security | ✅ BCRYPT (cost 12) |
-| Session Security | ✅ HttpOnly + 30min timeout |
-| HTTPS | ✅ Enforced + HSTS |
-| Rate Limiting | ✅ 60-sec order throttle |
-| File Upload | ✅ MIME validation |
+| Feature | التنفيذ | الموضع |
+|---------|---------|--------|
+| SQL Injection | PDO prepared statements في كل الاستعلامات | جميع ملفات `includes/` و `submit-order.php` |
+| XSS | HTML escaping عبر `e()` | `config.php:e()` |
+| CSRF | توكن عشوائي 32 بايت + `hash_equals` | `includes/csrf.php` |
+| Password Hashing | BCRYPT cost 12 | `includes/auth.php:admin_login()` |
+| Session | HttpOnly + SameSite=Lax + Secure (خارج localhost) | `includes/bootstrap.php` |
+| Login Rate Limiting | 5 محاولات / 10 دقائق ثم حظر 15 دقيقة، بمصدر IP مقيّد | `includes/login-attempts.php` |
+| Order Rate Limiting | حد 60 ثانية لكل IP + لكل جلسة | `submit-order.php:enforce_rate_limit()` |
+| File Upload | فحص MIME فعلي عبر `finfo`، اسم ملف عشوائي | `submit-order.php:handle_receipt_upload()`, `products-management.php` |
+| Legacy `?key=` login bypass | أُزيل نهائياً بتاريخ `2026-08-25` | — |
 
-**Status:** ✅ **PRODUCTION-READY**
+**لا تُستخدم عبارة "PRODUCTION-READY" في هذا الملف إلا بعد مراجعة يدوية تالية لهذه القائمة تؤكد كل سطر فيها.**
 
 ---
 

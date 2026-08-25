@@ -7,27 +7,23 @@ declare(strict_types=1);
  */
 
 /**
- * Get client IP address safely
+ * IPs الخاصة بأي reverse proxy موثوق (Nginx/Apache أمام PHP-FPM).
+ * اتركها فارغة إن كان الخادم يستقبل الطلبات مباشرة بلا وسيط.
  */
+const TRUSTED_PROXY_IPS = [];
+
 function get_client_ip(): string
 {
-    $remoteAddress = $_SERVER['REMOTE_ADDR'] ?? '';
-    if (!filter_var($remoteAddress, FILTER_VALIDATE_IP)) {
-        return 'unknown';
-    }
+    $remote = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 
-    // Forwarded headers are trusted only when the direct peer is configured.
-    $trustedProxies = array_filter(array_map('trim', explode(',', env('TRUSTED_PROXY_IPS', ''))));
-    if (in_array($remoteAddress, $trustedProxies, true) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        foreach (explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']) as $forwardedIp) {
-            $forwardedIp = trim($forwardedIp);
-            if (filter_var($forwardedIp, FILTER_VALIDATE_IP)) {
-                return $forwardedIp;
-            }
+    if (in_array($remote, TRUSTED_PROXY_IPS, true) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $forwarded = trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]);
+        if (filter_var($forwarded, FILTER_VALIDATE_IP)) {
+            return $forwarded;
         }
     }
 
-    return $remoteAddress;
+    return filter_var($remote, FILTER_VALIDATE_IP) ? $remote : '127.0.0.1';
 }
 
 /**
@@ -230,5 +226,70 @@ function cleanup_old_login_attempts(): void
         }
     } catch (Throwable) {
         // Ignore errors
+    }
+}
+
+function ensure_order_rate_limit_table(): void
+{
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+    $checked = true;
+
+    $pdo = db();
+    $driver = db_driver();
+
+    try {
+        $pdo->query('SELECT COUNT(*) FROM order_rate_limits');
+    } catch (Throwable) {
+        if ($driver === 'mysql') {
+            $pdo->exec('
+                CREATE TABLE IF NOT EXISTS order_rate_limits (
+                    ip_address VARCHAR(45) NOT NULL PRIMARY KEY,
+                    last_order_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+            ');
+        } elseif ($driver === 'sqlite') {
+            $pdo->exec('
+                CREATE TABLE order_rate_limits (
+                    ip_address TEXT NOT NULL PRIMARY KEY,
+                    last_order_at TEXT DEFAULT CURRENT_TIMESTAMP
+                )
+            ');
+        }
+    }
+}
+
+function order_rate_limit_seconds_remaining(string $ip, int $interval = 60): int
+{
+    ensure_order_rate_limit_table();
+    try {
+        $stmt = db()->prepare('SELECT last_order_at FROM order_rate_limits WHERE ip_address = ?');
+        $stmt->execute([$ip]);
+        $row = $stmt->fetch();
+        if (!$row) {
+            return 0;
+        }
+        $elapsed = time() - (new DateTime($row['last_order_at']))->getTimestamp();
+        return max(0, $interval - $elapsed);
+    } catch (Throwable) {
+        return 0;
+    }
+}
+
+function record_order_submission(string $ip): void
+{
+    ensure_order_rate_limit_table();
+    $driver = db_driver();
+    try {
+        $sql = $driver === 'mysql'
+            ? 'INSERT INTO order_rate_limits (ip_address, last_order_at) VALUES (?, NOW())
+               ON DUPLICATE KEY UPDATE last_order_at = NOW()'
+            : 'INSERT INTO order_rate_limits (ip_address, last_order_at) VALUES (?, CURRENT_TIMESTAMP)
+               ON CONFLICT(ip_address) DO UPDATE SET last_order_at = CURRENT_TIMESTAMP';
+        db()->prepare($sql)->execute([$ip]);
+    } catch (Throwable) {
+        // silent — لا يجب أن يمنع هذا إتمام الطلب
     }
 }

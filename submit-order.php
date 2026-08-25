@@ -24,6 +24,14 @@ function json_response(int $code, array $payload): void {
  * @param int $interval Seconds to wait between orders.
  */
 function enforce_rate_limit(int $interval = 60): void {
+    $ip = get_client_ip();
+    $wait = order_rate_limit_seconds_remaining($ip, $interval);
+    if ($wait > 0) {
+        json_response(429, [
+            'success' => false,
+            'message' => "يرجى الانتظار $wait ثواني قبل تقديم طلب جديد."
+        ]);
+    }
     if (!empty($_SESSION['last_order_time'])) {
         $elapsed = time() - (int)$_SESSION['last_order_time'];
         if ($elapsed < $interval) {
@@ -329,6 +337,7 @@ send_whatsapp_notification($wa);
 // ---------------------------------------------------------------------------
 clear_cart();
 $_SESSION['last_order_time'] = time();
+record_order_submission(get_client_ip());
 
 json_response(200, [
     'success'   => true,
