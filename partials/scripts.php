@@ -10,4 +10,23 @@
       window.addEventListener("appinstalled",function(){if(btn)btn.hidden=true;});
     })();
     </script>
-    <?php pwa_register_script(); ?>
+    <?php pwa_register_script();
+
+<script>
+(function() {
+  /* Anchor fallback: on non-index pages, #why/#products/etc do not exist.
+     Intercept clicks and redirect to index.php#anchor. */
+  var isIndex = /\/(index\.php)?(\?|#|$)/.test(location.pathname) || location.pathname === '/';
+  if (isIndex) return;
+  document.addEventListener('click', function(e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var hash = a.getAttribute('href');
+    if (hash.length < 2) return;
+    if (document.getElementById(hash.slice(1))) return;
+    e.preventDefault();
+    window.location.href = 'index.php' + hash;
+  });
+})();
+</script>
+ ?>

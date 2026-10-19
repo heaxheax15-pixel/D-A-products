@@ -84,6 +84,23 @@ function get_product_by_name(string $name): ?array
     return null;
 }
 
+function get_product_by_slug(string $slug): ?array
+{
+    $slug = trim($slug);
+    if ($slug === '') {
+        return null;
+    }
+    try {
+        $stmt = db()->prepare('SELECT * FROM products WHERE slug = ? AND is_active = 1 LIMIT 1');
+        $stmt->execute([$slug]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    } catch (Throwable $e) {
+        error_log('[D&A] get_product_by_slug: ' . $e->getMessage());
+        return null;
+    }
+}
+
 function get_featured_product(): ?array
 {
     foreach (get_products() as $p) {
