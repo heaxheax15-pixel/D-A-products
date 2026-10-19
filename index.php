@@ -118,64 +118,11 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
 
 <?php require __DIR__ . "/sections/products.php"; ?>
 
-    <!-- ========== TESTIMONIALS ========== -->
-    <section class="section testimonials hex-bg" id="testimonials">
-        <div class="container">
-            <span class="section-tag">آراء العملاء</span>
-            <h2 class="section-title-center">ماذا يقول عملاؤنا؟</h2>
-            <div class="carousel" id="testimonialCarousel">
-                <div class="carousel-track">
-                    <?php
-                    $reviews = [
-                        ['نورة العتيبي', '★★★★★', 'أفضل عسل سدر جربته! النكهة غنية والتوصيل سريع.'],
-                        ['خالد الشمري', '★★★★★', 'جودة ممتازة وتعامل راقٍ. أصبح عسل D&A خياري الدائم.'],
-                        ['فاطمة الحربي', '★★★★☆', 'عسل زهور برية لذيذ وطبيعي. أنصح به بشدة.'],
-                    ];
-                    foreach ($reviews as [$name, $stars, $text]): ?>
-                    <blockquote class="testimonial-card">
-                        <div class="avatar"><?= e(mb_substr($name, 0, 1)) ?></div>
-                        <div class="stars"><?= $stars ?></div>
-                        <p><?= e($text) ?></p>
-                        <cite>— <?= e($name) ?></cite>
-                    </blockquote>
-                    <?php endforeach; ?>
-                </div>
-                <div class="carousel-dots" id="carouselDots"></div>
-            </div>
-        </div>
-    </section>
+<?php require __DIR__ . "/sections/testimonials.php"; ?>
 
-    <!-- ========== GALLERY ========== -->
-    <section class="section gallery" id="gallery">
-        <div class="container">
-            <h2 class="section-title-center">معرض الصور</h2>
-            <div class="gallery-grid">
-                <?php for ($i = 1; $i <= 4; $i++): ?>
-                <a href="images/gallery-<?= $i ?>.webp" class="gallery-item" data-lightbox>
-                    <img src="images/gallery-<?= $i ?>.webp" alt="معرض D&A <?= $i ?>" loading="lazy">
-                </a>
-                <?php endfor; ?>
-            </div>
-        </div>
-    </section>
+<?php require __DIR__ . "/sections/gallery.php"; ?>
 
-    <!-- ========== TIPS ========== -->
-    <section class="section tips" id="tips">
-        <div class="container">
-            <span class="section-tag">نصائح العسل</span>
-            <h2 class="section-title-center">Honey Tips</h2>
-            <div class="tips-grid">
-                <?php foreach ($articles as $aid => $art): ?>
-                <a href="article.php?id=<?= (int) $aid ?>" class="tip-card reveal">
-                    <img src="<?= e($art['image']) ?>" alt="" loading="lazy">
-                    <h3><?= e($art['title']) ?></h3>
-                    <p><?= e($art['excerpt']) ?></p>
-                    <span class="read-more">اقرأ المزيد ←</span>
-                </a>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
+<?php require __DIR__ . "/sections/tips.php"; ?>
 
     <!-- ========== ORDER FORM ========== -->
     <section class="section order-section" id="order">
