@@ -37,7 +37,7 @@ function enforce_https(): void
     }
 
     // Only enforce on production domains
-    $trustedProxies = array_filter(array_map('trim', explode(',', TRUSTED_PROXY_IPS)));
+    $trustedProxies = is_array(TRUSTED_PROXY_IPS) ? TRUSTED_PROXY_IPS : array_filter(array_map('trim', explode(',', (string) TRUSTED_PROXY_IPS)));
     $remoteAddress = $_SERVER['REMOTE_ADDR'] ?? '';
     $isTrustedProxy = in_array($remoteAddress, $trustedProxies, true);
     $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||

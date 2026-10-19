@@ -10,7 +10,9 @@ declare(strict_types=1);
  * IPs الخاصة بأي reverse proxy موثوق (Nginx/Apache أمام PHP-FPM).
  * اتركها فارغة إن كان الخادم يستقبل الطلبات مباشرة بلا وسيط.
  */
-const TRUSTED_PROXY_IPS = [];
+    if (!defined('TRUSTED_PROXY_IPS')) {
+        define('TRUSTED_PROXY_IPS', []);
+    }
 
 function get_client_ip(): string
 {

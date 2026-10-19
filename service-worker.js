@@ -1,5 +1,5 @@
 /* D&A Admin PWA Service Worker */
-const CACHE_VERSION = 'da-admin-v4';
+const CACHE_VERSION = 'da-admin-v6';
 const OFFLINE_URL = 'offline.html';
 
 const PRECACHE = [
@@ -54,6 +54,8 @@ self.addEventListener('fetch', function (event) {
   const url = new URL(req.url);
 
   if (req.method !== 'GET') return;
+  /* Skip speculative prefetch requests entirely — they're throwaway. */
+  if (req.headers.get('purpose') === 'prefetch' || req.headers.get('sec-purpose') === 'prefetch') return;
   if (url.pathname.includes('config.php') || url.pathname.includes('submit-order') || url.pathname.includes('logout.php')) {
     return;
   }
@@ -87,8 +89,12 @@ self.addEventListener('fetch', function (event) {
       }).catch(function () {
         if (req.destination === 'document') {
           const base = baseFromScope(self.registration.scope);
-          return caches.match(withBase(base, OFFLINE_URL));
+          return caches.match(withBase(base, OFFLINE_URL)).then(function (r) {
+            return r || new Response('', { status: 200, statusText: 'OK', headers: { 'Content-Type': 'text/html' } });
+          });
         }
+        /* Return an empty 200 so failed prefetches / speculative requests don't pollute Console. */
+        return new Response('', { status: 200, statusText: 'OK' });
       });
     })
   );

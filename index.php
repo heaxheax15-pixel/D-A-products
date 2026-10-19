@@ -46,6 +46,9 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <!-- modern design system -->
     <link rel="stylesheet" href="<?= asset('assets/css/style.min.css') ?>">
+<?php if (defined('VIEW_LAYER') && VIEW_LAYER === 'v4'): ?>
+<link rel="stylesheet" href="assets/css/v4.css?v=<?= @filemtime(__DIR__ . '/assets/css/v4.css') ?: time() ?>">
+<?php endif; ?>
     <style>
         /* أي تجاوزات إضافية يمكن وضعها هنا، لكن التصميم الأساسي في modern.min.css */
     </style>

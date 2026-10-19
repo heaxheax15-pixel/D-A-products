@@ -20,7 +20,7 @@ function admin_header(string $title, string $active = ''): void
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= e($title) ?> – D&A Admin</title>
     <link rel="icon" href="<?= e(app_url('favicon.svg')) ?>" type="image/svg+xml">
-    <link rel="stylesheet" href="<?= asset('assets/css/admin.modern.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/admin.min.css') ?>">
     <meta name="theme-color" content="#0a0a0a">
     <?php pwa_head_tags(); ?>
 </head>

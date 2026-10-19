@@ -73,6 +73,12 @@ define('APP_VERSION', env('APP_VERSION', '2.0.0'));
 define('APP_ENV', strtolower((string) env('APP_ENV', 'production')));
 /** true = عرض الأخطاء (تطوير محلي فقط). false = إنتاج. */
 define('APP_DEBUG', (bool) filter_var(env('APP_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN));
+
+// When APP_DEBUG is false, suppress error display but keep errors in log.
+if (!APP_DEBUG) {
+    ini_set('display_errors', '0');
+    ini_set('log_errors', '1');
+}
 define('APP_ROOT', __DIR__);
 define('UPLOAD_RECEIPTS', APP_ROOT . '/uploads/receipts');
 define('UPLOAD_PRODUCTS', APP_ROOT . '/uploads/products');
@@ -85,7 +91,10 @@ define('DB_NAME', env('DB_NAME', 'da_honey_shop'));
 define('DB_USER', env('DB_USER', 'da_shop'));
 define('DB_PASS', env('DB_PASS', 'da_honey_local'));
 define('DB_CHARSET', env('DB_CHARSET', 'utf8mb4'));
-define('TRUSTED_PROXY_IPS', env('TRUSTED_PROXY_IPS', ''));
+$_trusted_ips_raw = (string) env('TRUSTED_PROXY_IPS', '');
+$_trusted_ips_arr = array_values(array_filter(array_map('trim', explode(',', $_trusted_ips_raw))));
+define('TRUSTED_PROXY_IPS', $_trusted_ips_arr);
+unset($_trusted_ips_raw, $_trusted_ips_arr);
 
 // Admin Authentication (from .env, will be hashed in auth.php)
 define('ADMIN_SECRET_KEY', env('ADMIN_SECRET_KEY'));
@@ -248,3 +257,6 @@ function app_url(string $path = ''): string
     $base = app_base();
     return ($base !== '' ? $base . '/' : '/') . $path;
 }
+
+// VIEW_LAYER: 'v3' = legacy styles (style.min.css only); 'v4' = adds assets/css/v4.css override layer
+define('VIEW_LAYER', getenv('VIEW_LAYER') ?: 'v4');

@@ -1,0 +1,129 @@
+/* v4.css — unlayered override, loaded after style.min.css, gated by VIEW_LAYER === 'v4'. */
+
+/* ==== tokens ==== */
+:root { --ink:#140700; --deep:#3E1504; --amber:#BD6412; --gold:#DF9417; --shine:#EDB530; --pale:#F8D67F; --cream:#FFFCF4; --cream-mid:#FAF1DC; --cream-dk:#EFD5A4; --white:#FFFFFF; --font-d:'Amiri',serif; --font-b:'Cairo',sans-serif; --sh-sm:0 1px 3px rgba(20,7,0,.06); --sh-md:0 6px 20px rgba(20,7,0,.08); --sh-lg:0 16px 48px rgba(20,7,0,.10); --sh-xl:var(--sh-lg); --r-sm:10px; --r-md:18px; --r-lg:28px; --ease:cubic-bezier(.22,1,.36,1); --tr:220ms cubic-bezier(.22,1,.36,1); --v4-container:1200px; --v4-space-1:.5rem; --v4-space-2:.75rem; --v4-space-3:1rem; --v4-space-4:1.5rem; --v4-space-5:2rem; --v4-space-6:2.5rem; --v4-space-7:3.5rem; --v4-space-8:5rem; }
+
+/* ==== base ==== */
+html body { font-feature-settings:"ss01","kern"; -webkit-font-smoothing:antialiased; }
+@media (prefers-reduced-motion: reduce) {
+  html body *, html body *::before, html body *::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+
+/* ==== header ==== */
+html body .site-header { position:sticky; top:0; padding-block:10px; background:transparent; }
+html body .site-header.is-scrolled,
+html body .site-header.scrolled { background:var(--cream); border-bottom:1px solid var(--cream-dk); backdrop-filter:none; box-shadow:none; padding-block:8px; }
+html body .main-nav a { background:transparent; }
+html body .main-nav a:hover { color:var(--amber); background:transparent; text-decoration:underline; text-underline-offset:4px; }
+
+/* nav CTA — legacy uses !important on these properties; we must match */
+.nav-cta { background:var(--amber) !important; box-shadow:none !important; }
+.nav-cta:hover { background:var(--deep) !important; transform:none !important; }
+
+/* ==== hero ==== */
+html body .hero { min-height:auto; padding-block:calc(var(--v4-space-8)*1.5); }
+html body .hero-bg.zoom-bg { animation:none; }
+html body .hero-overlay { background:rgba(20,7,0,.35); }
+html body .hero-content { padding-block:var(--v4-space-6); }
+
+/* ==== products ==== */
+html body #productsGrid { display:grid; gap:var(--v4-space-4); grid-template-columns:1fr; }
+@media (min-width:600px){ html body #productsGrid { grid-template-columns:repeat(2,1fr); } }
+@media (min-width:900px){ html body #productsGrid { grid-template-columns:repeat(3,1fr); } }
+html body .product-card { display:flex; flex-direction:column; }
+html body .product-img-wrap img { aspect-ratio:4/5; object-fit:cover; width:100%; transition:none; }
+html body .product-card:hover img { transform:none; }
+html body .product-desc { line-height:1.5; }
+html body .product-actions { margin-top:auto; }
+
+/* ==== order form ==== */
+html body #orderForm { max-width:720px; margin-inline:auto; }
+html body #orderForm label { font-size:.9rem; }
+html body #orderForm input,
+html body #orderForm select,
+html body #orderForm textarea { min-height:44px; }
+@media (max-width:600px){ html body #submitBtn { width:100%; } }
+
+/* ==== footer ==== */
+html body .site-footer { padding-block:calc(var(--v4-space-8)*.75); }
+html body .footer-grid { gap:var(--v4-space-4); }
+
+/* ==== section spacing + hidden ==== */
+html body #journey,
+html body #story,
+html body #gallery,
+html body #tips,
+html body #testimonials { padding-block:calc(var(--v4-space-8)*.7); }
+html body #countdown { display:none !important; }
+
+/* ==== batch 3 ==== */
+
+/* headings: tighter tracking for modern feel (Amiri has generous side-bearings) */
+html body h1, html body h2, html body h3 { letter-spacing:-0.01em; line-height:1.25; }
+html body .hero h1 { line-height:1.15; }
+
+/* eyebrows / kickers: uppercase tracking */
+html body .hero-eyebrow,
+html body [class*="section-title"] + * {
+  letter-spacing:.08em;
+}
+
+/* product card: price + CTA hierarchy */
+html body .product-price { font-weight:800; color:var(--deep); font-size:1.1em; }
+html body .product-card .order-product-btn,
+html body .product-card .btn-primary { font-weight:700; }
+@media (max-width:600px){
+  html body .product-card .order-product-btn,
+  html body .product-card .btn-primary { width:100%; }
+}
+
+/* section headings: consistent rhythm */
+html body section > .container > h2 { margin-bottom:var(--v4-space-2); }
+html body section > .container > .section-sub,
+html body section > .container > p:first-of-type { margin-bottom:var(--v4-space-5); color:var(--deep); }
+
+/* footer clean-up */
+html body .site-footer { background:var(--ink); color:var(--cream); }
+html body .site-footer a { color:var(--cream); }
+html body .site-footer a:hover { color:var(--pale); }
+
+/* newsletter input inside footer: same height as buttons */
+html body .site-footer input[type="email"] { min-height:44px; }
+
+/* smooth focus rings across interactive elements */
+html body a:focus-visible,
+html body button:focus-visible,
+html body input:focus-visible,
+html body select:focus-visible,
+html body textarea:focus-visible {
+  outline:2px solid var(--amber);
+  outline-offset:3px;
+  border-radius:6px;
+}
+
+/* ==== batch 4: header nav visibility fix ==== */
+html body .site-header .main-nav a { color: var(--deep); }
+html body .site-header .main-nav a:hover { color: var(--amber); text-decoration: underline; text-underline-offset: 4px; }
+html body .site-header .logo,
+html body .site-header .logo-text { color: var(--deep); }
+html body .site-header .bee-animated svg,
+html body .site-header .logo svg { color: var(--amber); }
+
+/* ==== batch 5: lighten dark parallax sections ==== */
+html body .parallax-section { background: var(--deep); }
+html body .parallax-bg { opacity: .55; }
+html body #featured .featured-overlay {
+  background: linear-gradient(135deg, rgba(20,7,0,.55), rgba(62,21,4,.35));
+}
+html body #story,
+html body #journey { color: #FFFDF7; }
+html body #story .container,
+html body #journey .container,
+html body #featured h2,
+html body #featured p { text-shadow: 0 1px 10px rgba(0,0,0,.45); }
+
+/* ==== batch 6 (fixed): neutralize legacy background-image URL at equal specificity so JS inline wins ==== */
+section#journey .parallax-bg,
+section#story .parallax-bg {
+  background-image: none;
+}
