@@ -1,3 +1,10 @@
+<?php
+/* Self-contained: safe to include from any page without pre-defining variables */
+$_waNum  = $waNum  ?? runtime('CONTACT_WHATSAPP', CONTACT_WHATSAPP);
+$_waMsg  = $waMsg  ?? urlencode(runtime('WHATSAPP_GREETING', WHATSAPP_GREETING));
+$_ig     = $ig     ?? runtime('CONTACT_INSTAGRAM', CONTACT_INSTAGRAM);
+$_tiktok = $tiktok ?? runtime('CONTACT_TIKTOK', CONTACT_TIKTOK);
+?>
     <footer class="site-footer" id="footer">
         <div class="container footer-grid">
             <div class="footer-col">
@@ -14,9 +21,9 @@
             </div>
             <div class="footer-col">
                 <h4>تواصل معنا</h4>
-                <a href="https://wa.me/<?= e($waNum) ?>?text=<?= $waMsg ?>" target="_blank" rel="noopener">واتساب</a>
-                <a href="<?= e($ig) ?>" target="_blank" rel="noopener">إنستغرام</a>
-                <a href="<?= e($tiktok) ?>" target="_blank" rel="noopener">تيك توك</a>
+                <a href="https://wa.me/<?= e($_waNum) ?>?text=<?= $_waMsg ?>" target="_blank" rel="noopener">واتساب</a>
+                <a href="<?= e($_ig) ?>" target="_blank" rel="noopener">إنستغرام</a>
+                <a href="<?= e($_tiktok) ?>" target="_blank" rel="noopener">تيك توك</a>
             </div>
             <div class="footer-col">
                 <h4>النشرة البريدية</h4>
@@ -28,3 +35,4 @@
         </div>
         <p class="footer-copy">&copy; <?= date('Y') ?> D&amp;A Product</p>
     </footer>
+<?php unset($_waNum, $_waMsg, $_ig, $_tiktok); ?>
