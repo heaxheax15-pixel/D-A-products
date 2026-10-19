@@ -63,7 +63,10 @@
           })
           .catch(function (err) {
               console.warn('[D&A cart] API error:', err);
-              return { success: false };
+              /* Network failure: hide the badge to avoid a stale count
+                 (better to show no badge than a wrong one). */
+              if (refs.badge) refs.badge.hidden = true;
+              return { success: false, error: 'network' };
           });
     }
 
@@ -131,6 +134,9 @@
         refs.drawer.setAttribute('aria-hidden', 'false');
         if (refs.button) refs.button.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
+        /* Defensive: refresh cart state every time the drawer opens.
+           Prevents badge/drawer desync when page HTML is stale. */
+        callApi('get', {});
     }
 
     function close() {

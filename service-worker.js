@@ -1,5 +1,5 @@
 /* D&A Shop Service Worker — customer-facing only (admin pages unregister this) */
-const CACHE_VERSION = 'da-shop-v1';
+const CACHE_VERSION = 'da-shop-v2';
 const OFFLINE_URL = 'offline.html';
 
 const PRECACHE = [
@@ -63,22 +63,27 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
-  var accept = req.headers.get('accept') || '';
-  var isDynamicPage = url.pathname.endsWith('.php') || accept.indexOf('text/html') !== -1;
-  if (isDynamicPage) {
-    event.respondWith(fetch(req));
-    return;
-  }
-
+  /* Navigations: network-first with offline fallback.
+     Must be checked BEFORE isDynamicPage, because navigations to .php
+     pages are the most critical requests and need a catch handler. */
   if (req.mode === 'navigate') {
     event.respondWith(
       fetch(req).catch(function () {
         const base = baseFromScope(self.registration.scope);
         return caches.match(withBase(base, OFFLINE_URL)).then(function (r) {
-          return r || new Response('', { status: 200, headers: { 'Content-Type': 'text/html' } });
+          return r || new Response('', { status: 503, statusText: 'Offline', headers: { 'Content-Type': 'text/html' } });
         });
       })
     );
+    return;
+  }
+
+  /* Non-navigation dynamic requests (AJAX, POST, .php sub-requests):
+     do NOT intercept — let the browser handle them natively.
+     Intercepting without a robust catch creates "Failed to fetch" noise. */
+  var accept = req.headers.get('accept') || '';
+  var isDynamicPage = url.pathname.endsWith('.php') || accept.indexOf('text/html') !== -1;
+  if (isDynamicPage) {
     return;
   }
 
