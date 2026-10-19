@@ -1,0 +1,54 @@
+    <!-- ========== ORDER FORM ========== -->
+    <section class="section order-section" id="order">
+        <div class="container">
+            <h2 class="section-title-center">اطلب عسلك الآن</h2>
+            <form class="order-form" id="orderForm" action="submit-order.php" method="post" enctype="multipart/form-data" novalidate aria-label="نموذج الطلب">
+                <?= csrf_field() ?>
+                <div class="order-form-header">
+                    <span>طلبك سهل ومباشر</span>
+                    <strong id="selectedProductSummary">اختر منتجك المفضل</strong>
+                </div>
+                <div class="form-row"><label for="customer_name">الاسم الكامل *</label><input type="text" id="customer_name" name="customer_name" required autocomplete="name"></div>
+                <div class="form-row"><label for="customer_phone">رقم الهاتف *</label><input type="tel" id="customer_phone" name="customer_phone" required pattern="<?= e(algerian_phone_pattern_html()) ?>" placeholder="05xxxxxxxx" dir="ltr" title="رقم جزائري: 10 أرقام تبدأ بـ 05 أو 06 أو 07"></div>
+                <div class="form-row"><label for="customer_address">العنوان *</label><textarea id="customer_address" name="customer_address" required rows="3"></textarea></div>
+                <div class="form-row form-row-2">
+                    <div><label for="product_name">المنتج *</label>
+                        <select id="product_name" name="product_name" required>
+                            <option value="">اختر المنتج</option>
+                            <?php foreach ($products as $p): ?>
+                            <option value="<?= e($p['name']) ?>" data-price="<?= e((string) $p['price']) ?>"><?= e($p['name']) ?> – <?= number_format((float) $p['price'], 0) ?> دج</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div><label for="quantity">الكمية *</label><input type="number" id="quantity" name="quantity" min="1" max="99" value="1" required></div>
+                </div>
+                <div class="order-total-wrap">
+                    <p class="order-total" id="orderTotal">الإجمالي: <strong>0</strong> دج</p>
+                    <p class="order-note">سيتم تأكيد الطلب مباشرة عبر واتساب بعد إرسال النموذج.</p>
+                </div>
+                <div class="form-row"><label for="notes">ملاحظات</label><textarea id="notes" name="notes" rows="2"></textarea></div>
+                <fieldset class="payment-fieldset">
+                    <legend>طريقة الدفع *</legend>
+                    <label class="radio-card">
+                        <input type="radio" name="payment_method" value="bank_transfer" required>
+                        <span>الدفع عبر CCP / BaridiMob</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="payment_method" value="cod" required>
+                        <span>الدفع عند الاستلام</span>
+                    </label>
+                </fieldset>
+                <div class="bank-info" id="bankInfo" hidden>
+                    <h3>معلومات التحويل</h3>
+                    <p><strong>طريقة الدفع:</strong> CCP / BaridiMob</p>
+                    <p><strong>اسم صاحب الحساب:</strong> <?= e($bankHolder) ?></p>
+                    <p><strong>رقم CCP أو RIP:</strong> <code dir="ltr"><?= e($bankIban) ?></code></p>
+                    <label class="receipt-label">
+                        إرفاق وصل الدفع (اختياري)
+                        <input type="file" name="receipt" id="receipt" accept="image/jpeg,image/png,image/webp">
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">إرسال الطلب</button>
+            </form>
+        </div>
+    </section>
