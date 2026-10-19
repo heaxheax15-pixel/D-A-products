@@ -48,11 +48,7 @@ if (count($related) < 3) {
     }
 }
 
-$waNum = runtime('CONTACT_WHATSAPP', CONTACT_WHATSAPP);
-$waMsg = urlencode(runtime('WHATSAPP_GREETING', WHATSAPP_GREETING));
-$ig = runtime('CONTACT_INSTAGRAM', CONTACT_INSTAGRAM);
-$tiktok = runtime('CONTACT_TIKTOK', CONTACT_TIKTOK);
-$siteUrl = SITE_URL ?: ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost'));
+$siteUrl = site_origin();
 
 $productImage = product_image_url($product);
 $productImageAbs = $productImage;

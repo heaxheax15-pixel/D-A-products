@@ -251,6 +251,22 @@ function app_base(): string
     return $base;
 }
 
+function site_origin(): string
+{
+    // Prefer SITE_URL / APP_URL when set to a real host (not localhost:8000 dev default)
+    if (defined('SITE_URL') && SITE_URL !== '') {
+        $parsed = parse_url(SITE_URL);
+        $host = $parsed['host'] ?? '';
+        // Reject dev defaults that don't match the current request
+        if ($host !== '' && $host !== 'localhost' && !preg_match('/^127\./', $host)) {
+            return rtrim(SITE_URL, '/');
+        }
+    }
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    return $scheme . '://' . $host;
+}
+
 function app_url(string $path = ''): string
 {
     $path = ltrim($path, '/');
