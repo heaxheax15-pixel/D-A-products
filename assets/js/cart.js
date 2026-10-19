@@ -2,7 +2,11 @@
 (function () {
     'use strict';
 
-    var CSRF = (typeof window.DA_CSRF !== 'undefined') ? window.DA_CSRF : '';
+    function getCsrf() {
+        // Defensive read at call time — in case inline CSRF script was
+        // reordered (bundle, cache, service worker, etc.).
+        return (typeof window.DA_CSRF !== 'undefined' && window.DA_CSRF) ? window.DA_CSRF : '';
+    }
     var endpoint = 'cart-action.php';
     var refs = {};
 
@@ -42,7 +46,7 @@
 
     function callApi(action, data) {
         var fd = new FormData();
-        fd.append('csrf_token', CSRF);
+        fd.append('csrf_token', getCsrf());
         fd.append('action', action);
         Object.keys(data || {}).forEach(function (k) { fd.append(k, data[k]); });
 
