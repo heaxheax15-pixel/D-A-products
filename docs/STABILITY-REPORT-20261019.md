@@ -39,7 +39,7 @@ backup of storage/da_honey_shop.sqlite; DB restored after every run.
 ## Pre-deployment checklist
 
 ### 1. Environment (`.env` on production server)
-\`\`\`
+```
 APP_ENV=production
 APP_DEBUG=false
 VIEW_LAYER=v4
@@ -47,7 +47,7 @@ APP_URL=https://your-domain.com
 TRUSTED_PROXY_IPS=            # leave empty unless behind reverse proxy
 DB_HOST=... DB_NAME=... DB_USER=... DB_PASS=...
 ADMIN_SECRET_KEY=<32+ char random string>
-\`\`\`
+```
 
 ### 2. Migration (MySQL production)
 - `includes/migration.php` runs automatically on first boot.
@@ -58,10 +58,10 @@ ADMIN_SECRET_KEY=<32+ char random string>
   Must NOT contain: product_name, quantity.
 
 ### 3. Smoke test post-deployment
-\`\`\`bash
+```bash
 bash tests/smoke.sh
 # expected: PASS: 6 / FAIL: 0
-\`\`\`
+```
 
 ### 4. Rollback
 - Visual layer: `VIEW_LAYER=v3` in .env
