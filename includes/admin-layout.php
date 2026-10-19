@@ -132,7 +132,7 @@ function admin_footer(): void
     ?>
     </main>
     <script src="<?= asset('assets/js/admin.js') ?>" defer></script>
-    <?php pwa_register_script(); ?>
+    <?php pwa_unregister_script(); ?>
 </body>
 </html>
     <?php

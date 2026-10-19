@@ -56,3 +56,24 @@ function pwa_register_script(): void
     </script>
     <?php
 }
+
+function pwa_unregister_script(): void
+{
+    ?>
+    <script>
+    (function () {
+      if (!('serviceWorker' in navigator)) return;
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        regs.forEach(function (r) { r.unregister(); });
+      }).catch(function () {});
+      if (window.caches && caches.keys) {
+        caches.keys().then(function (keys) {
+          keys.forEach(function (k) {
+            if (k.indexOf('da-admin-') === 0) caches.delete(k);
+          });
+        }).catch(function () {});
+      }
+    })();
+    </script>
+    <?php
+}

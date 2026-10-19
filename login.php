@@ -59,6 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $error === '') {
         <a href="index.php" class="login-back">← العودة للمتجر</a>
     </form>
     <script src="<?= asset('assets/js/admin.js') ?>" defer></script>
-    <?php pwa_register_script(); ?>
+    <?php pwa_unregister_script(); ?>
 </body>
 </html>

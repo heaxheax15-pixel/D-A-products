@@ -1,13 +1,12 @@
-/* D&A Admin PWA Service Worker */
-const CACHE_VERSION = 'da-admin-v6';
+/* D&A Shop Service Worker — customer-facing only (admin pages unregister this) */
+const CACHE_VERSION = 'da-shop-v1';
 const OFFLINE_URL = 'offline.html';
 
 const PRECACHE = [
   'offline.html',
-  'login.php',
-  'dashboard.php',
-  'assets/css/admin.min.css',
-  'assets/js/admin.js',
+  'assets/css/style.min.css',
+  'assets/css/v4.css',
+  'assets/js/main.min.js',
   'favicon.svg',
   'icons/icon-192.png',
   'icons/icon-512.png',
@@ -34,7 +33,9 @@ self.addEventListener('install', function (event) {
   const base = baseFromScope(self.registration.scope);
   event.waitUntil(
     caches.open(CACHE_VERSION).then(function (cache) {
-      return cache.addAll(PRECACHE.map(function (p) { return withBase(base, p); }));
+      return cache.addAll(PRECACHE.map(function (p) { return withBase(base, p); })).catch(function () {
+        return null;
+      });
     }).then(function () { return self.skipWaiting(); })
   );
 });
@@ -54,9 +55,11 @@ self.addEventListener('fetch', function (event) {
   const url = new URL(req.url);
 
   if (req.method !== 'GET') return;
-  /* Skip speculative prefetch requests entirely — they're throwaway. */
-  if (req.headers.get('purpose') === 'prefetch' || req.headers.get('sec-purpose') === 'prefetch') return;
-  if (url.pathname.includes('config.php') || url.pathname.includes('submit-order') || url.pathname.includes('logout.php')) {
+  if (url.pathname.includes('config.php') || url.pathname.includes('submit-order') || url.pathname.includes('logout.php') || url.pathname.includes('login.php')) {
+    return;
+  }
+
+  if (req.headers.get('purpose') === 'prefetch' || req.headers.get('sec-purpose') === 'prefetch') {
     return;
   }
 
@@ -71,7 +74,9 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(
       fetch(req).catch(function () {
         const base = baseFromScope(self.registration.scope);
-        return caches.match(withBase(base, OFFLINE_URL));
+        return caches.match(withBase(base, OFFLINE_URL)).then(function (r) {
+          return r || new Response('', { status: 200, headers: { 'Content-Type': 'text/html' } });
+        });
       })
     );
     return;
@@ -90,11 +95,10 @@ self.addEventListener('fetch', function (event) {
         if (req.destination === 'document') {
           const base = baseFromScope(self.registration.scope);
           return caches.match(withBase(base, OFFLINE_URL)).then(function (r) {
-            return r || new Response('', { status: 200, statusText: 'OK', headers: { 'Content-Type': 'text/html' } });
+            return r || new Response('', { status: 200, headers: { 'Content-Type': 'text/html' } });
           });
         }
-        /* Return an empty 200 so failed prefetches / speculative requests don't pollute Console. */
-        return new Response('', { status: 200, statusText: 'OK' });
+        return new Response('', { status: 200 });
       });
     })
   );
