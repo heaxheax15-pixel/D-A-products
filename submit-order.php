@@ -288,7 +288,7 @@ try {
         $pdo->rollBack();
     }
 
-    error_log($e);
+    error_log($e->getMessage());
 
     // RuntimeException = رسالة مقصودة للمستخدم (مخزون، منتج غير متاح...)
     // أي شيء آخر = خطأ نظام، لا نكشفه
