@@ -167,7 +167,15 @@ $ratingValue = 4.9;
                     </div>
 
                     <div class="product-detail-cta" style="display: flex; gap: .75rem; flex-wrap: wrap;">
-                        <a href="index.php#order" class="btn btn-primary btn-lg">اطلب الآن</a>
+                        <?php if ($isAvailable): ?>
+                        <button type="button"
+                                class="btn btn-primary btn-lg add-to-cart-btn"
+                                data-product-id="<?= (int) $product['id'] ?>"
+                                data-quantity="1">
+                            🛒 أضف للسلة
+                        </button>
+                        <?php endif; ?>
+                        <a href="index.php#order" class="btn btn-outline btn-lg">اطلب مباشرة</a>
                         <a href="index.php#products" class="btn btn-outline btn-lg">← كل المنتجات</a>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
+<?php require __DIR__ . '/cart-drawer.php'; ?>
     <!-- ========== SCRIPTS ========== -->
     <script>window.DA_CSRF = <?= json_encode(csrf_token(), JSON_UNESCAPED_UNICODE) ?>;</script>
     <script src="<?= asset('assets/js/main.min.js') ?>" defer></script>
+    <script src="<?= asset('assets/js/cart.js') ?>" defer></script>
     <script>
     (function(){
       var deferredPrompt=null;
@@ -10,8 +12,7 @@
       window.addEventListener("appinstalled",function(){if(btn)btn.hidden=true;});
     })();
     </script>
-    <?php pwa_register_script();
-
+    <?php pwa_register_script(); ?>
 <script>
 (function() {
   /* Anchor fallback: on non-index pages, #why/#products/etc do not exist.
@@ -29,4 +30,3 @@
   });
 })();
 </script>
- ?>
