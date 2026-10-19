@@ -105,55 +105,11 @@ $ogImg = $siteUrl . '/' . OG_IMAGE;
 
 <?php require __DIR__ . "/sections/about.php"; ?>
 
-    <!-- ========== JOURNEY ========== -->
-    <section class="section journey parallax-section" id="journey" data-parallax="images/pro3.webp">
-        <div class="parallax-bg"></div>
-        <div class="container journey-inner">
-            <span class="section-tag">رحلة العسل</span>
-            <h2 class="section-title-center light-text">كيف نستخلص عسلنا؟</h2>
-            <div class="timeline-interactive">
-                <?php
-                $steps = [
-                    ['الفرز', 'نختار أجود أقراص العسل بعد فحص دقيق.'],
-                    ['النضج', 'نتركه ينضج طبيعياً حتى يصل للقوام المثالي.'],
-                    ['القطف', 'عصر لطيف على البارد دون إتلاف الإنزيمات.'],
-                    ['التعبئة', 'تعبئة محكمة تحافظ على النقاء والنكهة.'],
-                ];
-                foreach ($steps as $i => [$t, $d]): ?>
-                <div class="tl-step reveal" data-step="<?= $i + 1 ?>">
-                    <div class="tl-icon"><svg viewBox="0 0 24 24" width="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div>
-                    <h3><?= e($t) ?></h3>
-                    <p><?= e($d) ?></p>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
+<?php require __DIR__ . "/sections/journey.php"; ?>
 
-    <!-- ========== TEAM ========== -->
-    <section class="section team" id="team">
-        <div class="container section-grid">
-            <figure class="section-media reveal">
-                <img src="images/pro3.webp" alt="خبير نحل في منحل D&A" loading="lazy">
-            </figure>
-            <div class="section-text reveal">
-                <span class="section-tag">خبراؤنا</span>
-                <h2>أيدٍ خبيرة خلف كل برطمان</h2>
-                <p>فريقنا من النحالين يعمل بشغف في مناحلنا الجبلية، بخبرة موروثة ومعايير حديثة لضمان عسل آمن ونقي في كل موسم.</p>
-            </div>
-        </div>
-    </section>
+<?php require __DIR__ . "/sections/team.php"; ?>
 
-    <!-- ========== STORY ========== -->
-    <section class="section story parallax-section" id="story" data-parallax="images/pro1.webp">
-        <div class="parallax-bg"></div>
-        <div class="container story-content reveal">
-            <span class="section-tag">مناحلنا</span>
-            <h2 class="light-text">قصة D&amp;A</h2>
-            <p class="light-text">ولدت D&amp;A Product من حب الطبيعة والنحل. بدأنا من مناحل عائلية صغيرة ونمونا مع ثقة عملائنا — لأننا نؤمن أن العسل ليس سلعة، بل أمانة.</p>
-            <p class="light-text">كل دفعة تروي قصة زهرة وجبل وشمس، نقدمها لكم بفخر.</p>
-        </div>
-    </section>
+<?php require __DIR__ . "/sections/story.php"; ?>
 
     <!-- ========== FEATURED PRODUCT ========== -->
     <?php if ($featured): ?>
