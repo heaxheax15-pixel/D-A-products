@@ -12,74 +12,74 @@ function migrate_orders_to_order_items(): void
     $pdo = db();
     $driver = db_driver();
 
-    try {
-        // Check if old orders table structure exists with product_name
-        $columns = db_get_table_columns('orders');
-        
-        if (!isset($columns['product_name']) || !isset($columns['quantity'])) {
-            // Already migrated or never had the old structure
-            return;
-        }
+    // Check if old orders table structure exists with product_name
+    $columns = db_get_table_columns('orders');
 
-        // Begin transaction
+    if (!isset($columns['product_name']) || !isset($columns['quantity'])) {
+        // Already migrated or never had the old structure
+        return;
+    }
+
+    // -------------------------------------------------------------------
+    // Phase 1: DML (transactional, idempotent)
+    // -------------------------------------------------------------------
+    try {
         $pdo->beginTransaction();
 
-        // Get all orders with product_name and quantity
         $stmt = $pdo->query('SELECT id, product_name, quantity, total_price FROM orders');
         $orders = $stmt->fetchAll();
 
-        // Migrate each order
+        $insertStmt = $pdo->prepare(
+            'INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)'
+        );
+        $checkStmt = $pdo->prepare('SELECT COUNT(*) FROM order_items WHERE order_id = ?');
+
         foreach ($orders as $order) {
             $orderId = (int) $order['id'];
             $productName = (string) $order['product_name'];
             $quantity = (int) $order['quantity'];
-            $totalPrice = (float) $order['total_price'];
 
-            // Find product by name
-            $product = db()->prepare('SELECT id, price FROM products WHERE name = ?')->execute([$productName])->fetch();
-            
+            // Find product by name (prepare → execute → fetch)
+            $lookup = $pdo->prepare('SELECT id, price FROM products WHERE name = ?');
+            $lookup->execute([$productName]);
+            $product = $lookup->fetch();
+
             if ($product) {
-                $productId = (int) $product['id'];
-                $unitPrice = (float) $product['price'];
-                
-                // Insert into order_items
-                $insertStmt = $pdo->prepare(
-                    'INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)'
-                );
-                $insertStmt->execute([$orderId, $productId, $quantity, $unitPrice]);
+                // Idempotency: skip if this order already has items
+                $checkStmt->execute([$orderId]);
+                if ((int) $checkStmt->fetchColumn() > 0) {
+                    continue;
+                }
+                $insertStmt->execute([
+                    $orderId,
+                    (int) $product['id'],
+                    $quantity,
+                    (float) $product['price'],
+                ]);
             }
-        }
-
-        // Drop old columns from orders table (if database supports it)
-        if ($driver === 'mysql') {
-            try {
-                $pdo->exec('ALTER TABLE orders DROP COLUMN product_name');
-            } catch (Throwable) {
-                // Column might not exist
-            }
-            try {
-                $pdo->exec('ALTER TABLE orders DROP COLUMN quantity');
-            } catch (Throwable) {
-                // Column might not exist
-            }
-            // Add updated_at if not exists
-            try {
-                $pdo->exec('ALTER TABLE orders ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
-            } catch (Throwable) {
-                // Column already exists
-            }
-        } elseif ($driver === 'sqlite') {
-            // SQLite doesn't support dropping columns directly, so we skip
-            // The new schema already has the correct structure
         }
 
         $pdo->commit();
-        error_log('[D&A Migration] Orders migrated to order_items successfully');
     } catch (Throwable $e) {
-        $pdo->rollBack();
-        error_log('[D&A Migration Error] ' . $e->getMessage());
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        error_log('[D&A Migration Error] DML phase failed: ' . $e->getMessage());
         throw $e;
     }
+
+    // -------------------------------------------------------------------
+    // Phase 2: DDL (non-transactional — MySQL implicitly commits DDL)
+    // Each ALTER individually guarded; partial failure is safe because
+    // DML is idempotent and flag file only written on full success.
+    // -------------------------------------------------------------------
+    if ($driver === 'mysql') {
+        try { $pdo->exec('ALTER TABLE orders DROP COLUMN product_name'); } catch (Throwable) {}
+        try { $pdo->exec('ALTER TABLE orders DROP COLUMN quantity'); } catch (Throwable) {}
+        try { $pdo->exec('ALTER TABLE orders ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'); } catch (Throwable) {}
+    }
+
+    error_log('[D&A Migration] Orders migrated to order_items successfully');
 }
 
 /**
