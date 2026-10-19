@@ -311,3 +311,20 @@ html body .add-to-cart-btn {
     justify-content: center;
     gap: .4rem;
 }
+
+/* ==== batch 4.3.e: [hidden] overrides (author CSS beats UA default) ==== */
+html body .cart-badge[hidden] { display: none !important; }
+html body [hidden].cart-drawer-footer { display: none !important; }
+
+/* ==== btn-outline readability on cream background ==== */
+html body .btn-outline {
+    background: transparent;
+    color: var(--deep);
+    border: 2px solid var(--deep);
+}
+html body .btn-outline:hover,
+html body .btn-outline:focus-visible {
+    background: var(--deep);
+    color: var(--white);
+    border-color: var(--deep);
+}

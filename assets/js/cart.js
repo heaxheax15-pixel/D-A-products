@@ -65,7 +65,10 @@
               console.warn('[D&A cart] API error:', err);
               /* Network failure: hide the badge to avoid a stale count
                  (better to show no badge than a wrong one). */
-              if (refs.badge) refs.badge.hidden = true;
+              if (refs.badge) {
+                  refs.badge.hidden = true;
+                  refs.badge.textContent = '0';
+              }
               return { success: false, error: 'network' };
           });
     }
@@ -77,6 +80,7 @@
                 refs.badge.textContent = cart.total_quantity;
             } else {
                 refs.badge.hidden = true;
+                refs.badge.textContent = '0';
             }
         }
         if (refs.countEl) refs.countEl.textContent = cart.count;
