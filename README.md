@@ -1,5 +1,18 @@
 # 🐝 D&A Honey Store – Premium E-Commerce Platform
 
+## Project status
+
+**Stable checkpoint: 2026-10-19**
+
+- `index.php` is a thin orchestrator (75 lines). All sections are in
+  `sections/`, all layout partials in `partials/`.
+- Full order path has an automated smoke test:
+  `bash tests/smoke.sh` → expected `PASS: 6 / FAIL: 0`.
+- See `docs/STABILITY-REPORT-*.md` for what's covered, what's tested,
+  what remains (product page, cart UI, sitemap, backup).
+
+
+
 > **عسل طبيعي 100% – أصالة الطبيعة في كل قطرة**
 
 ![Version](https://img.shields.io/badge/version-2.1.0-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue) ![PHP](https://img.shields.io/badge/PHP-8.3+-purple)
