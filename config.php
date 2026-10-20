@@ -137,6 +137,15 @@ function db(): PDO
         return $pdo;
     }
 
+    // DB driver selection (explicit "sqlite" skips MySQL entirely)
+    $_driver = strtolower(trim((string) env('DB_DRIVER', 'mysql')));
+
+    if ($_driver === 'sqlite') {
+        require_once __DIR__ . '/includes/db-sqlite.php';
+        $pdo = db_sqlite_connect();
+        return $pdo;
+    }
+
     // MySQL connection (required for production)
     $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET;
     try {
