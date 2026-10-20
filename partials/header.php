@@ -1,8 +1,8 @@
     <header class="site-header" id="siteHeader">
         <div class="container header-inner">
             <a href="#top" class="logo">
-  <!-- الشعار الفني -->
-  <img src="<?= asset('images/logo-compact.png') ?>" alt="D&amp;A Product" width="48" height="48" style="object-fit: contain; border-radius: 50%;">
+  <!-- الشعار المتحرك -->
+  <span class="logo-mark" aria-hidden="true"><?php include __DIR__ . '/../images/logo-animated.svg'; ?></span>
   <!-- الاسم الكتابي يبقى ظاهراً -->
   <span class="logo-text">D&amp;A Product</span>
 </a>

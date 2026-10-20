@@ -353,3 +353,33 @@ html body .product-card .btn[disabled] {
     pointer-events: none;
 }
 html body .add-to-cart-btn[disabled] { opacity: .55; cursor: not-allowed; }
+
+/* ==== animated logo mark ==== */
+html body .logo-mark {
+    display: inline-flex;
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    align-items: center;
+    justify-content: center;
+}
+html body .logo-mark svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+    filter: drop-shadow(0 2px 6px rgba(189, 100, 18, .28));
+    transition: transform var(--tr);
+}
+html body .logo:hover .logo-mark svg { transform: scale(1.08) rotate(-4deg); }
+html body .logo-mark--footer {
+    width: 84px;
+    height: 84px;
+    flex-basis: 84px;
+    margin-bottom: .75rem;
+}
+html body .logo-mark--footer svg { filter: drop-shadow(0 3px 10px rgba(0, 0, 0, .35)); }
+
+@media (prefers-reduced-motion: reduce) {
+    html body .logo-mark svg { filter: none; }
+}

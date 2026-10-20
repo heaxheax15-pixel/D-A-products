@@ -7,7 +7,8 @@ $_tiktok = $tiktok ?? runtime('CONTACT_TIKTOK', CONTACT_TIKTOK);
 ?>
     <footer class="site-footer" id="footer">
         <div class="container footer-grid">
-            <div class="footer-col">
+            <div class="footer-col footer-brand">
+                <span class="logo-mark logo-mark--footer" aria-hidden="true"><?php include __DIR__ . '/../images/logo-animated.svg'; ?></span>
                 <span class="logo-text">D&amp;A Product</span>
                 <p><?= e(SITE_TAGLINE) ?></p>
             </div>
