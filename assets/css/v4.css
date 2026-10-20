@@ -593,52 +593,74 @@ html body .logo:hover .logo-img {
 }
 
 
-/* ==== batch 10: two-half honey drop ==== */
+/* ==== batch 11: two drops merge into one, then fall ==== */
+
 html body .drip-half {
     position: absolute;
     top: 62px;
-    width: 7px;
-    height: 13px;
-    background: radial-gradient(circle at 50% 30%, #FDD87A 0%, #DF9417 40%, #BD6412 100%);
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 42% 32%, #FDE39A 0%, #DF9417 45%, #BD6412 100%);
     opacity: 0;
     pointer-events: none;
     z-index: 0;
-    filter: drop-shadow(0 1px 2px rgba(196, 100, 10, 0.35));
+    box-shadow: 0 1px 3px rgba(196, 100, 10, 0.4);
+    will-change: transform, opacity, border-radius;
 }
 
 html body .drip-left {
-    left: 50%;
-    margin-left: -23px;
-    border-radius: 50% 40% 40% 50% / 30% 30% 70% 70%;
-    animation: drip-merge-left 2.4s ease-in infinite;
+    animation: drip-merge-left 2.6s cubic-bezier(0.4, 0, 0.25, 1) infinite;
 }
 
 html body .drip-right {
-    left: 50%;
-    margin-left: 16px;
-    border-radius: 40% 50% 50% 40% / 30% 30% 70% 70%;
-    animation: drip-merge-right 2.4s ease-in infinite;
+    animation: drip-merge-right 2.6s cubic-bezier(0.4, 0, 0.25, 1) infinite;
 }
 
+/* LEFT drop: appears at left, slides to center, becomes half of one drop */
 @keyframes drip-merge-left {
-    0%, 10%   { transform: translateX(0) translateY(0) scale(0.5); opacity: 0; }
-    22%       { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
-    45%       { transform: translateX(16px) translateY(3px) scale(1); opacity: 1; }
-    55%       { transform: translateX(16px) translateY(5px) scale(1); opacity: 1; }
-    100%      { transform: translateX(16px) translateY(38px) scale(0.4); opacity: 0; }
+    0%, 8%   { transform: translate(-50%, -18px) scale(0);    opacity: 0; border-radius: 50%; }
+    20%      { transform: translate(-50%, -18px) scale(1);    opacity: 1; border-radius: 50%; }
+    42%      { transform: translate(-52%, -2px)  scale(1.05); opacity: 1; border-radius: 50% 40% 45% 50% / 40% 45% 50% 50%; }
+    52%      { transform: translate(-50%, 2px)   scale(1.5);  opacity: 1; border-radius: 45% 50% 50% 45% / 42% 42% 58% 58%; }
+    60%      { transform: translate(-50%, 4px)   scale(1);    opacity: 1; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
+    100%     { transform: translate(-50%, 40px)  scale(1.05); opacity: 0; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; }
 }
 
+/* RIGHT drop: symmetrical, meets the left one at center */
 @keyframes drip-merge-right {
-    0%, 10%   { transform: translateX(0) translateY(0) scale(0.5); opacity: 0; }
-    22%       { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
-    45%       { transform: translateX(-16px) translateY(3px) scale(1); opacity: 1; }
-    55%       { transform: translateX(-16px) translateY(5px) scale(1); opacity: 1; }
-    100%      { transform: translateX(-16px) translateY(38px) scale(0.4); opacity: 0; }
+    0%, 8%   { transform: translate(-50%, -18px) scale(0);    opacity: 0; border-radius: 50%; }
+    20%      { transform: translate(-50%, -18px) scale(1);    opacity: 1; border-radius: 50%; }
+    42%      { transform: translate(-48%, -2px)  scale(1.05); opacity: 1; border-radius: 40% 50% 50% 40% / 45% 40% 50% 50%; }
+    52%      { transform: translate(-50%, 2px)   scale(1.5);  opacity: 1; border-radius: 50% 45% 45% 50% / 42% 42% 58% 58%; }
+    60%      { transform: translate(-50%, 4px)   scale(1);    opacity: 1; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
+    100%     { transform: translate(-50%, 40px)  scale(1.05); opacity: 0; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; }
+}
+
+/* "Alive" pulse that radiates from the logo — reinforces the heartbeat feel */
+html body .logo-mark-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+    background: radial-gradient(circle, rgba(223, 148, 23, 0.45) 0%, rgba(223, 148, 23, 0) 65%);
+    animation: logo-heartbeat 2.6s ease-out infinite;
+}
+
+@keyframes logo-heartbeat {
+    0%, 55%  { transform: scale(0.7); opacity: 0; }
+    66%      { transform: scale(1);   opacity: 0.5; }
+    82%      { transform: scale(1.35); opacity: 0; }
+    100%     { transform: scale(1.35); opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    html body .logo-mark-wrap,
-    html body .drip-half {
+    html body .drip-half,
+    html body .logo-mark-wrap::after {
         animation: none !important;
+        opacity: 0 !important;
     }
 }

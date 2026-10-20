@@ -59,3 +59,45 @@ a{color:var(--gold)}
   .admin-table td{display:flex;justify-content:space-between;border:0;padding:.35rem}
   .admin-table td::before{content:attr(data-label);font-weight:700;color:var(--gold)}
 }
+
+/* ==== admin logo (matches site) ==== */
+.admin-sidebar .logo{display:flex;align-items:center;gap:12px;text-decoration:none;padding:0 1.25rem 1.25rem;position:relative}
+.admin-sidebar .logo-img{width:52px;height:52px;object-fit:contain;border-radius:50%;position:relative;z-index:1;
+  filter:drop-shadow(0 2px 5px rgba(245,166,35,.25));animation:admin-logo-breathe 6s ease-in-out infinite}
+.admin-sidebar .logo:hover .logo-img{filter:drop-shadow(0 0 8px rgba(245,166,35,.7)) drop-shadow(0 4px 14px rgba(196,100,10,.4))}
+.admin-sidebar .logo .logo-text{display:flex;flex-direction:column;line-height:1;gap:3px}
+.admin-sidebar .logo .logo-brand{font-size:1.7rem;font-weight:700;letter-spacing:1px;line-height:1;color:#DF9417}
+@supports(background-clip:text) or (-webkit-background-clip:text){
+  .admin-sidebar .logo .logo-brand{background:linear-gradient(135deg,#FDD87A 0%,#DF9417 45%,#BD6412 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+}
+.admin-sidebar .logo .logo-sub{font-size:.62rem;font-weight:700;letter-spacing:5px;color:#f5ebe0;text-transform:uppercase;line-height:1;padding-inline-start:3px}
+.admin-sidebar .logo-mark-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;
+  animation:admin-logo-swing 6s ease-in-out infinite;transform-origin:center top;will-change:transform}
+.admin-sidebar .logo-mark-wrap::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle,rgba(245,166,35,.5) 0%,rgba(245,166,35,0) 65%);animation:admin-logo-heartbeat 2.6s ease-out infinite}
+.admin-sidebar .drip-half{position:absolute;top:44px;left:50%;width:9px;height:9px;border-radius:50%;opacity:0;pointer-events:none;z-index:0;
+  background:radial-gradient(circle at 42% 32%,#FDE39A 0%,#DF9417 45%,#BD6412 100%);box-shadow:0 1px 3px rgba(196,100,10,.4);
+  will-change:transform,opacity,border-radius}
+.admin-sidebar .drip-left{animation:admin-drip-left 2.6s cubic-bezier(.4,0,.25,1) infinite}
+.admin-sidebar .drip-right{animation:admin-drip-right 2.6s cubic-bezier(.4,0,.25,1) infinite}
+@keyframes admin-logo-swing{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
+@keyframes admin-logo-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+@keyframes admin-logo-heartbeat{0%,55%{transform:scale(.7);opacity:0}66%{transform:scale(1);opacity:.5}82%,100%{transform:scale(1.35);opacity:0}}
+@keyframes admin-drip-left{
+  0%,8%{transform:translate(-50%,-18px) scale(0);opacity:0;border-radius:50%}
+  20%{transform:translate(-50%,-18px) scale(1);opacity:1;border-radius:50%}
+  42%{transform:translate(-52%,-2px) scale(1.05);opacity:1;border-radius:50% 40% 45% 50%/40% 45% 50% 50%}
+  52%{transform:translate(-50%,2px) scale(1.5);opacity:1;border-radius:45% 50% 50% 45%/42% 42% 58% 58%}
+  60%{transform:translate(-50%,4px) scale(1);opacity:1;border-radius:50% 50% 50% 50%/60% 60% 40% 40%}
+  100%{transform:translate(-50%,40px) scale(1.05);opacity:0;border-radius:50% 50% 40% 40%/60% 60% 40% 40%}}
+@keyframes admin-drip-right{
+  0%,8%{transform:translate(-50%,-18px) scale(0);opacity:0;border-radius:50%}
+  20%{transform:translate(-50%,-18px) scale(1);opacity:1;border-radius:50%}
+  42%{transform:translate(-48%,-2px) scale(1.05);opacity:1;border-radius:40% 50% 50% 40%/45% 40% 50% 50%}
+  52%{transform:translate(-50%,2px) scale(1.5);opacity:1;border-radius:50% 45% 45% 50%/42% 42% 58% 58%}
+  60%{transform:translate(-50%,4px) scale(1);opacity:1;border-radius:50% 50% 50% 50%/60% 60% 40% 40%}
+  100%{transform:translate(-50%,40px) scale(1.05);opacity:0;border-radius:50% 50% 40% 40%/60% 60% 40% 40%}}
+@media(prefers-reduced-motion:reduce){
+  .admin-sidebar .logo-img,.admin-sidebar .logo-mark-wrap,.admin-sidebar .logo-mark-wrap::after,.admin-sidebar .drip-half{animation:none!important}
+  .admin-sidebar .drip-half,.admin-sidebar .logo-mark-wrap::after{opacity:0!important}}
