@@ -537,15 +537,6 @@ html body .logo-mark-wrap {
     0%, 100% { transform: rotate(-3.5deg); }
     50%      { transform: rotate(3.5deg); }
 }
-    50%      { transform: rotate(2.5deg); }
-}
-
-/* Honey drips — 3 staggered drops */
-
-    15%  { transform: translate(-50%, 1px) scale(1);  opacity: 1; }
-    70%  { opacity: 0.85; }
-    100% { transform: translate(-50%, 30px) scale(0.6); opacity: 0; }
-}
 
 /* Luxury text */
 html body .logo .logo-text {
@@ -596,7 +587,10 @@ html body .logo:hover .logo-img {
 @media (prefers-reduced-motion: reduce) {
     html body .logo-mark-wrap,
     html body .logo-img,
+    html body .drip-half {
+        animation: none !important;
     }
+}
 
 
 /* ==== batch 10: two-half honey drop ==== */
