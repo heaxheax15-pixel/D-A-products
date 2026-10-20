@@ -14,7 +14,7 @@
                 <span>الإجمالي:</span>
                 <strong id="cartDrawerTotal">0 دج</strong>
             </div>
-            <a href="index.php#order" class="btn btn-primary btn-block" id="cartDrawerCheckout">متابعة الطلب</a>
+            <a href="cart.php" class="btn btn-primary btn-block" id="cartDrawerCheckout">عرض السلة</a>
         </footer>
     </div>
 </aside>

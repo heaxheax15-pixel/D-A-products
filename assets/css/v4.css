@@ -664,3 +664,40 @@ html body .logo-mark-wrap::after {
         opacity: 0 !important;
     }
 }
+
+/* ==== batch 12: full-page cart view ==== */
+html body .cart-page .breadcrumb a { color: var(--amber); text-decoration: none; }
+html body .cart-page .breadcrumb a:hover { text-decoration: underline; }
+html body .cart-page-list {
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    border: 1px solid var(--cream-dk);
+    border-radius: var(--r-md);
+    padding: 0 1.25rem;
+    box-shadow: var(--sh-sm);
+}
+html body .cart-page .cart-item {
+    grid-template-columns: 64px 1fr auto auto auto;
+}
+html body .cart-page-thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: var(--r-sm);
+    background: var(--cream-mid);
+}
+@media (max-width: 560px) {
+    html body .cart-page .cart-item {
+        grid-template-columns: 56px 1fr auto;
+        grid-template-areas:
+            "img info remove"
+            "img qty  subtotal";
+        row-gap: .5rem;
+    }
+    html body .cart-page-thumb { grid-area: img; width: 56px; height: 56px; }
+    html body .cart-page .cart-item-info { grid-area: info; }
+    html body .cart-page .cart-item-qty { grid-area: qty; justify-self: start; }
+    html body .cart-page .cart-item-subtotal { grid-area: subtotal; justify-self: end; }
+    html body .cart-page .cart-item [data-action="remove"] { grid-area: remove; justify-self: end; }
+}
