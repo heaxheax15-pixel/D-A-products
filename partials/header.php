@@ -2,9 +2,9 @@
         <div class="container header-inner">
             <a href="#top" class="logo">
   <!-- الشعار المتحرك -->
-  <img src="<?= asset('images/logo-compact.png') ?>" alt="D&A" class="logo-img">
+  <span class="logo-mark-wrap"><img src="<?= asset('images/logo-compact.png') ?>" alt="D&amp;A" class="logo-img"><span class="drip" aria-hidden="true"></span></span>
   <!-- الاسم الكتابي يبقى ظاهراً -->
-  <span class="logo-text">D&amp;A Product</span>
+  <span class="logo-text"><span class="logo-brand">D&amp;A</span><span class="logo-sub">PRODUCT</span></span>
 </a>
                 
             <?php $__cc = function_exists('get_cart_total_quantity') ? get_cart_total_quantity() : 0; ?>
