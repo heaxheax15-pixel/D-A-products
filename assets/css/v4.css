@@ -383,3 +383,45 @@ html body .logo-mark--footer svg { filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 
 @media (prefers-reduced-motion: reduce) {
     html body .logo-mark svg { filter: none; }
 }
+
+
+/* ==== batch 7: luxury logo override ==== */
+html body .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+html body .logo-img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    animation: luxury-breathe 6s ease-in-out infinite;
+    filter: drop-shadow(0 2px 4px rgba(196, 100, 10, 0.15));
+}
+html body .logo:hover .logo-img {
+    transform: scale(1.05);
+}
+html body .logo-img-full {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    animation: luxury-breathe 8s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+}
+html body .logo-mark { display: none; }
+
+@keyframes luxury-breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html body .logo-img,
+    html body .logo-img-full {
+        animation: none !important;
+        transition: none !important;
+    }
+}
