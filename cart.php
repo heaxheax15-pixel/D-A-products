@@ -106,7 +106,7 @@ $ogImg   = $siteUrl . '/' . OG_IMAGE;
                     <strong id="cartPageTotal" style="color: var(--deep); font-size: 1.2rem;"><?= number_format($subtotal, 0) ?> دج</strong>
                 </div>
                 <div style="display: flex; gap: .75rem; flex-wrap: wrap;">
-                    <a href="index.php#order" class="btn btn-primary btn-lg" style="flex: 1; text-align: center;">متابعة الطلب</a>
+                    <a href="checkout.php" class="btn btn-primary btn-lg" style="flex: 1; text-align: center;">متابعة الطلب</a>
                     <button type="button" class="btn btn-outline btn-lg" id="cartPageClear" style="flex: 0 0 auto;">تفريغ السلة</button>
                 </div>
             </div>
