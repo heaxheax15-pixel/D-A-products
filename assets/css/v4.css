@@ -561,10 +561,6 @@ html body .drip {
     100% { transform: translate(-50%, 30px) scale(0.6); opacity: 0; }
 }
 
-    80%       { opacity: 0.6; }
-    100%      { transform: translate(-50%, 28px) scale(0.7); opacity: 0; }
-}
-
 /* Luxury text */
 html body .logo .logo-text {
     display: flex;
