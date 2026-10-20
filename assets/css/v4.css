@@ -761,3 +761,40 @@ html body .checkout-page .payment-options {
 @media (max-width: 720px) {
     html body .checkout-grid { grid-template-columns: 1fr; }
 }
+
+/* ==== batch 14: luxury cart & checkout ==== */
+html body .cart-page, 
+html body .checkout-page {
+    background: var(--cream);
+    min-height: 80vh;
+}
+html body .cart-summary-box,
+html body .checkout-summary,
+html body .checkout-form-wrapper {
+    border: 1px solid var(--cream-dk);
+    background: var(--white);
+    box-shadow: 0 10px 30px rgba(20, 7, 0, .05);
+    border-radius: var(--r-lg);
+    transition: transform 0.3s ease;
+}
+html body .cart-item {
+    padding: 1rem 0;
+    border-bottom: 1px dashed var(--cream-dk);
+}
+html body .cart-item:last-child {
+    border-bottom: none;
+}
+html body .cart-item strong {
+    font-family: var(--font-d);
+    color: var(--deep);
+    font-size: 1.1rem;
+}
+html body .cart-item-price {
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+@media (max-width: 768px) {
+    html body .checkout-grid {
+        grid-template-columns: 1fr !important;
+    }
+}

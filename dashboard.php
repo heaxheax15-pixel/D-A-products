@@ -88,4 +88,56 @@ admin_header('لوحة القيادة', 'dashboard');
     </table>
 </div>
 <p><a href="orders.php" class="btn-admin-primary">عرض كل الطلبات →</a></p>
+<?php
+// Fetch real order counts for the last 7 days
+$chartLabels = [];
+$chartData = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $chartLabels[] = date('D', strtotime("-$i days"));
+    try {
+        $stmt = db()->prepare("SELECT COUNT(*) FROM orders WHERE DATE(created_at) = ?");
+        $stmt->execute([$date]);
+        $chartData[] = (int)$stmt->fetchColumn();
+    } catch (Throwable $e) {
+        $chartData[] = 0;
+    }
+}
+?>
+
+    <div class="admin-panel" style="margin-top: 2rem;">
+        <h2 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gold);">الطلبات في آخر 7 أيام</h2>
+        <canvas id="salesChart" style="max-height: 300px; width: 100%;"></canvas>
+    </div>
+    <script src="<?= asset('assets/js/vendor/chart.umd.min.js') ?>"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('salesChart');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: <?= json_encode($chartLabels) ?>,
+                datasets: [{
+                    label: 'الطلبات',
+                    data: <?= json_encode($chartData) ?>,
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: 'rgba(59, 130, 246, 1)',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    });
+    </script>
 <?php admin_footer(); ?>
