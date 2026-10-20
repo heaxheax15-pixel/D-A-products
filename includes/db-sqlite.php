@@ -40,6 +40,23 @@ function db_sqlite_bootstrap(PDO $pdo): void
         )'
     );
     $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            slug TEXT NOT NULL UNIQUE,
+            description TEXT NOT NULL,
+            price REAL NOT NULL,
+            image TEXT NOT NULL DEFAULT \'images/pro4.webp\',
+            category TEXT NOT NULL DEFAULT \'flowers\',
+            is_bestseller INTEGER NOT NULL DEFAULT 0,
+            is_featured INTEGER NOT NULL DEFAULT 0,
+            is_active INTEGER NOT NULL DEFAULT 1,
+            sort_order INTEGER NOT NULL DEFAULT 0,
+            quantity_available INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )'
+    );
+    $pdo->exec(
         'CREATE TABLE IF NOT EXISTS order_items (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             order_id INTEGER NOT NULL,
@@ -56,23 +73,6 @@ function db_sqlite_bootstrap(PDO $pdo): void
     );
     $pdo->exec(
         'CREATE INDEX IF NOT EXISTS idx_order_items_product_id ON order_items(product_id)'
-    );
-    $pdo->exec(
-        'CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            slug TEXT NOT NULL UNIQUE,
-            description TEXT NOT NULL,
-            price REAL NOT NULL,
-            image TEXT NOT NULL DEFAULT \'images/pro4.webp\',
-            category TEXT NOT NULL DEFAULT \'flowers\',
-            is_bestseller INTEGER NOT NULL DEFAULT 0,
-            is_featured INTEGER NOT NULL DEFAULT 0,
-            is_active INTEGER NOT NULL DEFAULT 1,
-            sort_order INTEGER NOT NULL DEFAULT 0,
-            quantity_available INTEGER NOT NULL DEFAULT 0,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-        )'
     );
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS settings (

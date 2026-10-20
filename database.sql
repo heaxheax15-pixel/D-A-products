@@ -22,22 +22,6 @@ CREATE TABLE IF NOT EXISTS orders (
   INDEX idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS order_items (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  order_id INT NOT NULL,
-  product_id INT NOT NULL,
-  quantity INT NOT NULL DEFAULT 1,
-  unit_price DECIMAL(10,2) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_order_id (order_id),
-  INDEX idx_product_id (product_id),
-  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ترقية من v1 (نفّذ يدوياً إن وُجد الجدول قديماً):
--- ALTER TABLE orders ADD COLUMN receipt_path VARCHAR(500) NULL AFTER payment_method;
-
 CREATE TABLE IF NOT EXISTS products (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -56,6 +40,22 @@ CREATE TABLE IF NOT EXISTS products (
   INDEX idx_active (is_active),
   INDEX idx_quantity (quantity_available)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS order_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL,
+  product_id INT NOT NULL,
+  quantity INT NOT NULL DEFAULT 1,
+  unit_price DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_order_id (order_id),
+  INDEX idx_product_id (product_id),
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ترقية من v1 (نفّذ يدوياً إن وُجد الجدول قديماً):
+-- ALTER TABLE orders ADD COLUMN receipt_path VARCHAR(500) NULL AFTER payment_method;
 
 CREATE TABLE IF NOT EXISTS inventory_transactions (
   id INT AUTO_INCREMENT PRIMARY KEY,
