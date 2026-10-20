@@ -2,7 +2,7 @@
         <div class="container header-inner">
             <a href="#top" class="logo">
   <!-- الشعار الفني -->
-  <img src="<?= asset('images/logo.svg') ?>" alt="D&A Product" width="60" height="60">
+  <img src="<?= asset('images/logo-compact.png') ?>" alt="D&amp;A Product" width="48" height="48" style="object-fit: contain; border-radius: 50%;">
   <!-- الاسم الكتابي يبقى ظاهراً -->
   <span class="logo-text">D&amp;A Product</span>
 </a>
