@@ -55,7 +55,30 @@ try {
         case 'add':
             $pid = (int) ($_POST['product_id'] ?? 0);
             $qty = max(1, min(99, (int) ($_POST['quantity'] ?? 1)));
-            if ($pid <= 0 || !add_to_cart($pid, $qty)) {
+            if ($pid <= 0) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'message' => 'معرّف المنتج غير صالح'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            $_product = get_product_by_id($pid);
+            if (!$_product) {
+                http_response_code(404);
+                echo json_encode(['success' => false, 'message' => 'المنتج غير موجود'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            $_avail = (int) ($_product['quantity_available'] ?? 0);
+            if ($_avail <= 0) {
+                http_response_code(409);
+                echo json_encode(['success' => false, 'message' => 'هذا المنتج غير متوفر حالياً'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            $_existing = get_cart_item_quantity($pid);
+            if (($_existing + $qty) > $_avail) {
+                http_response_code(409);
+                echo json_encode(['success' => false, 'message' => 'الكمية المطلوبة غير متوفرة. المتوفر: ' . $_avail . ' فقط'], JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+            if (!add_to_cart($pid, $qty)) {
                 http_response_code(400);
                 echo json_encode(['success' => false, 'message' => 'تعذّر إضافة المنتج'], JSON_UNESCAPED_UNICODE);
                 exit;
@@ -70,6 +93,15 @@ try {
                 http_response_code(400);
                 echo json_encode(['success' => false, 'message' => 'معرّف المنتج غير صالح'], JSON_UNESCAPED_UNICODE);
                 exit;
+            }
+            if ($qty > 0) {
+                $_p = get_product_by_id($pid);
+                $_a = $_p ? (int) ($_p['quantity_available'] ?? 0) : 0;
+                if ($qty > $_a) {
+                    http_response_code(409);
+                    echo json_encode(['success' => false, 'message' => 'الكمية المطلوبة غير متوفرة. المتوفر: ' . $_a . ' فقط'], JSON_UNESCAPED_UNICODE);
+                    exit;
+                }
             }
             update_cart_quantity($pid, $qty);
             $msg = 'تم تحديث الكمية';

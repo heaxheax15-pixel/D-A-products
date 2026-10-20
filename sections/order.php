@@ -2,6 +2,14 @@
     <section class="section order-section" id="order">
         <div class="container">
             <h2 class="section-title-center">اطلب عسلك الآن</h2>
+            <?php $_inStock = array_values(array_filter($products, function($p) { return ((int)($p["quantity_available"] ?? 0)) > 0; })); ?>
+            <?php if (empty($_inStock)): ?>
+            <div class="order-unavailable-notice" style="max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; background: var(--cream-mid); border-radius: var(--r-lg); text-align: center;">
+                <h3 style="font-family: var(--font-d); font-size: 1.6rem; margin-bottom: 1rem;">الطلب سيفتح قريباً</h3>
+                <p style="color: var(--deep); margin-bottom: 1.5rem;">نجهّز الدفعة الأولى من عسلنا الطبيعي. للاستفسار أو الطلب المسبق:</p>
+                <a href="https://wa.me/<?= e(runtime("CONTACT_WHATSAPP", CONTACT_WHATSAPP)) ?>?text=<?= urlencode(runtime("WHATSAPP_GREETING", WHATSAPP_GREETING)) ?>" class="btn btn-primary btn-lg" target="_blank" rel="noopener">تواصل عبر واتساب</a>
+            </div>
+            <?php else: ?>
             <form class="order-form" id="orderForm" action="submit-order.php" method="post" enctype="multipart/form-data" novalidate aria-label="نموذج الطلب">
                 <?= csrf_field() ?>
                 <div class="order-form-header">
@@ -15,7 +23,7 @@
                     <div><label for="product_name">المنتج *</label>
                         <select id="product_name" name="product_name" required>
                             <option value="">اختر المنتج</option>
-                            <?php foreach ($products as $p): ?>
+                            <?php foreach ($_inStock as $p): ?>
                             <option value="<?= e($p['name']) ?>" data-price="<?= e((string) $p['price']) ?>"><?= e($p['name']) ?> – <?= number_format((float) $p['price'], 0) ?> دج</option>
                             <?php endforeach; ?>
                         </select>
@@ -50,5 +58,6 @@
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg btn-block" id="submitBtn">إرسال الطلب</button>
             </form>
+            <?php endif; ?>
         </div>
     </section>

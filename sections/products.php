@@ -29,14 +29,17 @@
                     $cat = $p['category'] ?? 'flowers';
                     $img = product_image_url($p);
                     $rating = (int) ($p['rating'] ?? 5);
+                    $available = (int) ($p['quantity_available'] ?? 0);
+                    $inStock = $available > 0;
                 ?>
-                <article class="product-card" data-category="<?= e($cat) ?>"
+                <article class="product-card<?= $inStock ? '' : ' is-unavailable' ?>" data-category="<?= e($cat) ?>"
                     data-id="<?= (int) ($p['id'] ?? 0) ?>"
                     data-name="<?= e($p['name']) ?>"
                     data-price="<?= e((string) $p['price']) ?>"
                     data-desc="<?= e($p['description']) ?>"
                     data-image="<?= e($img) ?>">
                     <?php if (!empty($p['is_bestseller'])): ?><span class="badge-bestseller">الأكثر مبيعاً</span><?php endif; ?>
+                    <?php if (!$inStock): ?><span class="badge-unavailable">قريباً</span><?php endif; ?>
                     <div class="product-img-wrap">
                         <img src="<?= e($img) ?>" alt="<?= e($p['name']) ?>" loading="lazy">
                     </div>
@@ -47,7 +50,11 @@
                         <p class="product-price"><?= number_format((float) $p['price'], 0) ?> <span>دج</span></p>
                         <div class="product-actions">
                             <button type="button" class="btn btn-ghost quick-view-btn">تفاصيل سريعة</button>
+                            <?php if ($inStock): ?>
                             <button type="button" class="btn btn-secondary order-product-btn" data-product="<?= e($p['name']) ?>" data-price="<?= e((string) $p['price']) ?>">اطلب</button>
+                            <?php else: ?>
+                            <button type="button" class="btn btn-secondary" disabled aria-disabled="true">غير متوفر</button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </article>

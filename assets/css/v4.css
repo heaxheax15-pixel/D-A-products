@@ -328,3 +328,28 @@ html body .btn-outline:focus-visible {
     color: var(--white);
     border-color: var(--deep);
 }
+
+/* ==== batch 5: honest stock states ==== */
+html body .product-card.is-unavailable { opacity: .92; }
+html body .product-card.is-unavailable .product-img-wrap img { filter: saturate(.7); }
+html body .badge-unavailable {
+    position: absolute;
+    top: 12px;
+    inset-inline-start: 12px;
+    background: var(--deep);
+    color: var(--cream);
+    font-size: .75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: .02em;
+    z-index: 2;
+}
+html body .product-card { position: relative; }
+html body .product-card button[disabled],
+html body .product-card .btn[disabled] {
+    opacity: .55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+html body .add-to-cart-btn[disabled] { opacity: .55; cursor: not-allowed; }
