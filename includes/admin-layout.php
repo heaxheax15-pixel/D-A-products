@@ -21,6 +21,7 @@ function admin_header(string $title, string $active = ''): void
     <title><?= e($title) ?> – D&A Admin</title>
     <link rel="icon" href="<?= e(app_url('favicon.svg')) ?>" type="image/svg+xml">
     <link rel="stylesheet" href="<?= asset('assets/css/admin.min.css') ?>">
+    <link rel="stylesheet" href="<?= asset('assets/css/admin-blue.css') ?>">
     <meta name="theme-color" content="#0a0a0a">
     <?php pwa_head_tags(); ?>
 </head>

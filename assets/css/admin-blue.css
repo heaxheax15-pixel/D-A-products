@@ -1,0 +1,17 @@
+/* D&A Admin — Blue Theme */
+:root {
+  --gold: #3b82f6;       /* Primary accent (was gold) */
+  --brown: #1e40af;      /* Darker accent */
+  --dark: #0a1628;       /* Page bg */
+  --panel: #12243d;      /* Card bg */
+  --text: #e0f2fe;       /* Text */
+  --border: rgba(59,130,246,.25);
+}
+
+/* Tweak specific elements that might not use variables */
+.login-card { background: var(--panel); }
+.btn-admin-primary { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; }
+.stat-card strong { color: #60a5fa; }
+.admin-table th { background: rgba(0,0,0,.3); color: #60a5fa; }
+.admin-sidebar nav a:hover, .admin-sidebar nav a.active { background: rgba(59,130,246,.15); color: #60a5fa; }
+.btn-install-pwa { background: linear-gradient(135deg, #3b82f6, #60a5fa); color: #fff; }
