@@ -8,8 +8,7 @@ $_tiktok = $tiktok ?? runtime('CONTACT_TIKTOK', CONTACT_TIKTOK);
     <footer class="site-footer" id="footer">
         <div class="container footer-grid">
             <div class="footer-col">
-                <span class="logo-text"><img src="<?= asset('images/logo-full.png') ?>" alt="D&amp;A Product" width="120" height="120" style="display: block; margin-bottom: 1rem; object-fit: contain;"><br>
-D&amp;A Product</span>
+                <span class="logo-text">D&amp;A Product</span>
                 <p><?= e(SITE_TAGLINE) ?></p>
             </div>
             <div class="footer-col">
