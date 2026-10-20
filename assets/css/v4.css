@@ -528,34 +528,20 @@ html body .logo-mark-wrap {
     justify-content: center;
     width: 72px;
     height: 72px;
-    animation: logo-swing 8s ease-in-out infinite;
-    transform-origin: center 0;
+    animation: logo-swing 6s ease-in-out infinite;
+    transform-origin: center top;
+    will-change: transform;
 }
 
 @keyframes logo-swing {
-    0%, 100% { transform: rotate(-2.5deg); }
+    0%, 100% { transform: rotate(-3.5deg); }
+    50%      { transform: rotate(3.5deg); }
+}
     50%      { transform: rotate(2.5deg); }
 }
 
 /* Honey drips — 3 staggered drops */
-html body .drip {
-    position: absolute;
-    top: 64px;
-    left: 50%;
-    width: 7px;
-    height: 10px;
-    background: radial-gradient(circle at 35% 30%, #FDD87A 0%, #DF9417 40%, #BD6412 100%);
-    border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 0;
-    transform: translate(-50%, 0) scale(0.5);
-    animation: honey-drip 2s cubic-bezier(0.4, 0, 0.9, 1) infinite;
-    filter: drop-shadow(0 1px 2px rgba(196, 100, 10, 0.3));
-}
 
-@keyframes honey-drip {
-    0%   { transform: translate(-50%, 0) scale(0.4);  opacity: 0; }
     15%  { transform: translate(-50%, 1px) scale(1);  opacity: 1; }
     70%  { opacity: 0.85; }
     100% { transform: translate(-50%, 30px) scale(0.6); opacity: 0; }
@@ -610,7 +596,55 @@ html body .logo:hover .logo-img {
 @media (prefers-reduced-motion: reduce) {
     html body .logo-mark-wrap,
     html body .logo-img,
-    html body .drip {
+    }
+
+
+/* ==== batch 10: two-half honey drop ==== */
+html body .drip-half {
+    position: absolute;
+    top: 62px;
+    width: 7px;
+    height: 13px;
+    background: radial-gradient(circle at 50% 30%, #FDD87A 0%, #DF9417 40%, #BD6412 100%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    filter: drop-shadow(0 1px 2px rgba(196, 100, 10, 0.35));
+}
+
+html body .drip-left {
+    left: 50%;
+    margin-left: -23px;
+    border-radius: 50% 40% 40% 50% / 30% 30% 70% 70%;
+    animation: drip-merge-left 2.4s ease-in infinite;
+}
+
+html body .drip-right {
+    left: 50%;
+    margin-left: 16px;
+    border-radius: 40% 50% 50% 40% / 30% 30% 70% 70%;
+    animation: drip-merge-right 2.4s ease-in infinite;
+}
+
+@keyframes drip-merge-left {
+    0%, 10%   { transform: translateX(0) translateY(0) scale(0.5); opacity: 0; }
+    22%       { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
+    45%       { transform: translateX(16px) translateY(3px) scale(1); opacity: 1; }
+    55%       { transform: translateX(16px) translateY(5px) scale(1); opacity: 1; }
+    100%      { transform: translateX(16px) translateY(38px) scale(0.4); opacity: 0; }
+}
+
+@keyframes drip-merge-right {
+    0%, 10%   { transform: translateX(0) translateY(0) scale(0.5); opacity: 0; }
+    22%       { transform: translateX(0) translateY(0) scale(1); opacity: 1; }
+    45%       { transform: translateX(-16px) translateY(3px) scale(1); opacity: 1; }
+    55%       { transform: translateX(-16px) translateY(5px) scale(1); opacity: 1; }
+    100%      { transform: translateX(-16px) translateY(38px) scale(0.4); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html body .logo-mark-wrap,
+    html body .drip-half {
         animation: none !important;
     }
 }

@@ -2,7 +2,7 @@
         <div class="container header-inner">
             <a href="#top" class="logo">
   <!-- الشعار المتحرك -->
-  <span class="logo-mark-wrap"><img src="<?= asset('images/logo-compact.png') ?>" alt="D&amp;A" class="logo-img"><span class="drip" aria-hidden="true"></span></span>
+  <span class="logo-mark-wrap"><span class="drip-half drip-left" aria-hidden="true"></span><span class="drip-half drip-right" aria-hidden="true"></span><img src="<?= asset('images/logo-compact.png') ?>" alt="D&amp;A" class="logo-img"></span>
   <!-- الاسم الكتابي يبقى ظاهراً -->
   <span class="logo-text"><span class="logo-brand">D&amp;A</span><span class="logo-sub">PRODUCT</span></span>
 </a>
