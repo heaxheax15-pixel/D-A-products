@@ -36,7 +36,7 @@
                 fallbackText.disabled = true;
             }
             if (detailsRow) detailsRow.hidden = false;
-            if (detailsInput) detailsInput.required = true;
+            if (detailsInput) detailsInput.required = false;
             hidden.disabled = false;
         }
 

@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-row" id="addressDetailsRow" hidden>
                     <div>
-                        <label for="address_details">تفاصيل العنوان (الشارع، رقم المنزل...) *</label>
+                        <label for="address_details">تفاصيل العنوان (الشارع، رقم المنزل...) — اختياري</label>
                         <input type="text" id="address_details" placeholder="مثال: حي 5 جويلية، عمارة 4...">
                     </div>
                 </div>
