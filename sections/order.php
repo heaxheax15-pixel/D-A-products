@@ -18,7 +18,35 @@
                 </div>
                 <div class="form-row"><label for="customer_name">الاسم الكامل *</label><input type="text" id="customer_name" name="customer_name" required autocomplete="name"></div>
                 <div class="form-row"><label for="customer_phone">رقم الهاتف *</label><input type="tel" id="customer_phone" name="customer_phone" required pattern="<?= e(algerian_phone_pattern_html()) ?>" placeholder="05xxxxxxxx" dir="ltr" title="رقم جزائري: 10 أرقام تبدأ بـ 05 أو 06 أو 07"></div>
-                <div class="form-row"><label for="customer_address">العنوان *</label><textarea id="customer_address" name="customer_address" required rows="3"></textarea></div>
+                <div class="form-row checkout-location" id="locationBlock">
+                    <div>
+                        <label for="wilaya">الولاية *</label>
+                        <select id="wilaya" required>
+                            <option value="">اختر الولاية</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row checkout-location" id="communeRow" hidden>
+                    <div>
+                        <label for="commune">البلدية *</label>
+                        <select id="commune" required>
+                            <option value="">اختر البلدية</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row" id="addressDetailsRow" hidden>
+                    <div>
+                        <label for="address_details">تفاصيل العنوان (الشارع، رقم المنزل...) *</label>
+                        <input type="text" id="address_details" placeholder="مثال: حي 5 جويلية، عمارة 4...">
+                    </div>
+                </div>
+                <div class="form-row" id="addressFallbackRow">
+                    <div>
+                        <label for="customer_address_fallback">العنوان الكامل *</label>
+                        <textarea id="customer_address_fallback" name="customer_address" required rows="3" placeholder="الولاية، البلدية، الشارع..."></textarea>
+                    </div>
+                </div>
+                <input type="hidden" id="customer_address" disabled>
                 <div class="form-row form-row-2">
                     <div><label for="product_name">المنتج *</label>
                         <select id="product_name" name="product_name" required>
