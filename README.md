@@ -271,6 +271,37 @@ BANK_IBAN=007999990123456789
 
 ---
 
+## 👨‍💻 Development
+
+### Minified assets
+
+The site loads the minified files `style.min.css`, `admin.min.css`,
+`main.min.js` and `admin.min.js`. After editing any of the source files
+(`style.css`, `admin.css`, `main.js`, `admin.js`), regenerate the minified
+files before deploying:
+
+```bash
+node build-assets.js          # rebuild all *.min.* files
+node build-assets.js --check  # fail (exit 1) if any min file is stale
+```
+
+> **Always run `node build-assets.js` before deployment** so the minified
+> files match the sources. Shipping a stale `.min` file silently drops
+> styling and JavaScript logic — exactly the kind of breakage the build
+> script is designed to catch.
+
+`build-assets.js` is dependency-free (no `npm install` needed) and refuses to
+write an output if it would drop any selector/function present in the source,
+so a stale or truncated min file can never ship silently.
+
+### Run Dev Server
+
+```bash
+php -S localhost:8000
+```
+
+---
+
 ## 🧪 Testing
 
 ### Check PHP Syntax
@@ -283,26 +314,6 @@ php -l includes/*.php *.php
 
 ```bash
 php -r "require 'config.php'; echo 'OK: ' . db()->query('SELECT 1')->fetchColumn();"
-```
-
-### Build Minified Assets
-
-The site loads `style.min.css` and `main.min.js`. Regenerate them from their
-sources after editing `style.css`, `admin.css`, `main.js` or `admin.js`:
-
-```bash
-node build-assets.js          # rebuild all *.min.* files
-node build-assets.js --check  # fail (exit 1) if any min file is stale
-```
-
-`build-assets.js` is dependency-free (no npm install needed) and refuses to
-write an output if it would drop any selector/function present in the source,
-so a stale or truncated min file can never ship silently.
-
-### Run Dev Server
-
-```bash
-php -S localhost:8000
 ```
 
 ---
