@@ -29,15 +29,19 @@
         var cities = [];
 
         function enableLocationUI() {
-            // Selects are now the source of truth; hide the manual textarea.
+            // Selects are now the source of truth; hide the manual textarea and
+            // take its name away so it is not submitted alongside the hidden
+            // field (both would otherwise post as customer_address).
             if (fallbackRow) fallbackRow.hidden = true;
             if (fallbackText) {
                 fallbackText.required = false;
                 fallbackText.disabled = true;
+                fallbackText.removeAttribute("name");
             }
             if (detailsRow) detailsRow.hidden = false;
             if (detailsInput) detailsInput.required = false;
             hidden.disabled = false;
+            syncHidden();
         }
 
         function syncHidden() {

@@ -41,7 +41,7 @@
         <textarea id="customer_address_fallback" name="customer_address" required rows="3" placeholder="الولاية، البلدية، الشارع..."><?= e($_POST['customer_address'] ?? '') ?></textarea>
     </div>
 </div>
-<input type="hidden" id="customer_address" disabled>
+<input type="hidden" id="customer_address" name="customer_address" disabled>
 <div class="form-row">
     <div>
         <label>طريقة الدفع *</label>
