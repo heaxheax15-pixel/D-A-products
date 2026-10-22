@@ -134,7 +134,6 @@ if (empty(get_cart()) && !empty($_POST['product_id'])) {
     add_to_cart($pid, $qty);
 }
 
-$cart = get_cart();
 if (empty(get_cart())) {
     $pid = 0;
 
@@ -155,7 +154,12 @@ if (empty(get_cart())) {
         add_to_cart($pid, $qty);
     }
 }
-if (empty(get_cart())) {
+
+// Capture the cart AFTER any auto-add above, otherwise the item added from
+// product_id/product_name would be missing from the transaction loop below
+// (order saved with 0 items and total_price = 0).
+$cart = get_cart();
+if (empty($cart)) {
     json_response(400, ['success' => false, 'message' => 'سلة التسوق فارغة. يرجى إضافة منتجات قبل تقديم الطلب.']);
 } 
 
