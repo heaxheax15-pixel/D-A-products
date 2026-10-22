@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $slug = trim((string) ($_POST['slug'] ?? '')) ?: preg_replace('/\s+/', '-', $name);
         $desc = trim((string) ($_POST['description'] ?? ''));
         $price = (float) ($_POST['price'] ?? 0);
+        $quantity = max(0, (int) ($_POST['quantity_available'] ?? 0));
         $category = (string) ($_POST['category'] ?? 'flowers');
         $image = trim((string) ($_POST['current_image'] ?? 'images/pro4.webp'));
         $bestseller = !empty($_POST['is_bestseller']) ? 1 : 0;
@@ -48,14 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($name !== '' && $price > 0) {
             if ($id > 0) {
                 $stmt = db()->prepare(
-                    'UPDATE products SET name=?, slug=?, description=?, price=?, image=?, category=?, is_bestseller=?, is_featured=?, sort_order=? WHERE id=?'
+                    'UPDATE products SET name=?, slug=?, description=?, price=?, image=?, category=?, is_bestseller=?, is_featured=?, sort_order=?, quantity_available=? WHERE id=?'
                 );
-                $stmt->execute([$name, $slug, $desc, $price, $image, $category, $bestseller, $featured, $sort, $id]);
+                $stmt->execute([$name, $slug, $desc, $price, $image, $category, $bestseller, $featured, $sort, $quantity, $id]);
             } else {
                 $stmt = db()->prepare(
-                    'INSERT INTO products (name, slug, description, price, image, category, is_bestseller, is_featured, sort_order) VALUES (?,?,?,?,?,?,?,?,?)'
+                    'INSERT INTO products (name, slug, description, price, image, category, is_bestseller, is_featured, sort_order, quantity_available) VALUES (?,?,?,?,?,?,?,?,?,?)'
                 );
-                $stmt->execute([$name, $slug, $desc, $price, $image, $category, $bestseller, $featured, $sort]);
+                $stmt->execute([$name, $slug, $desc, $price, $image, $category, $bestseller, $featured, $sort, $quantity]);
             }
             if ($featured) {
                 db()->exec('UPDATE products SET is_featured = 0');
@@ -97,6 +98,7 @@ admin_header($edit ? 'تعديل منتج' : 'إدارة المنتجات', 'pro
             <label>Slug <input type="text" name="slug" value="<?= e($edit['slug'] ?? '') ?>"></label>
             <label>الوصف <textarea name="description" rows="3" required><?= e($edit['description'] ?? '') ?></textarea></label>
             <label>السعر <input type="number" step="0.01" name="price" required value="<?= e((string) ($edit['price'] ?? '')) ?>"></label>
+            <label>الكمية المتوفرة (0 = غير متوفر) <input type="number" name="quantity_available" min="0" value="<?= e((string) ($edit['quantity_available'] ?? 0)) ?>"></label>
             <label>الفئة
                 <select name="category">
                     <?php foreach ($categories as $k => $v): ?>
