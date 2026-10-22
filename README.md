@@ -15,7 +15,7 @@
 
 > **عسل طبيعي 100% – أصالة الطبيعة في كل قطرة**
 
-![Version](https://img.shields.io/badge/version-2.1.0-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue) ![PHP](https://img.shields.io/badge/PHP-8.3+-purple)
+![Version](https://img.shields.io/badge/version-2.0.0-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue) ![PHP](https://img.shields.io/badge/PHP-8.3+-purple)
 
 ---
 
@@ -285,6 +285,20 @@ php -l includes/*.php *.php
 php -r "require 'config.php'; echo 'OK: ' . db()->query('SELECT 1')->fetchColumn();"
 ```
 
+### Build Minified Assets
+
+The site loads `style.min.css` and `main.min.js`. Regenerate them from their
+sources after editing `style.css`, `admin.css`, `main.js` or `admin.js`:
+
+```bash
+node build-assets.js          # rebuild all *.min.* files
+node build-assets.js --check  # fail (exit 1) if any min file is stale
+```
+
+`build-assets.js` is dependency-free (no npm install needed) and refuses to
+write an output if it would drop any selector/function present in the source,
+so a stale or truncated min file can never ship silently.
+
 ### Run Dev Server
 
 ```bash
@@ -295,11 +309,7 @@ php -S localhost:8000
 
 ## 📚 Documentation
 
-- **[MYSQL_SETUP_GUIDE.md](MYSQL_SETUP_GUIDE.md)** – Complete MySQL setup instructions
-- **[PRODUCTION_SECURITY_AUDIT.md](PRODUCTION_SECURITY_AUDIT.md)** – Detailed security analysis
-- **[SECURITY_UPGRADES_SUMMARY.md](SECURITY_UPGRADES_SUMMARY.md)** – Security enhancements
-- **[IMPLEMENTATION_LOG.txt](IMPLEMENTATION_LOG.txt)** – Implementation details
-- **[DEPLOYMENT_QUICK_START.md](DEPLOYMENT_QUICK_START.md)** – Deployment checklist
+- **[docs/STABILITY-REPORT-20261019.md](docs/STABILITY-REPORT-20261019.md)** – Stability checkpoint: what is covered and tested
 
 ---
 
@@ -372,6 +382,6 @@ Before deploying to production:
 
 ---
 
-**Version:** 2.1.0 (Security Edition)  
+**Version:** 2.0.0 (Security Edition)  
 **Last Updated:** May 30, 2026  
 **Status:** ✅ Production-Ready

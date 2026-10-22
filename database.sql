@@ -96,13 +96,13 @@ INSERT INTO products (name, slug, description, price, image, category, is_bestse
 ON DUPLICATE KEY UPDATE name = VALUES(name);
 
 INSERT INTO settings (setting_key, setting_value) VALUES
-('bank_name', 'البنك الأهلي السعودي'),
-('bank_holder', 'D&A Product'),
-('bank_iban', 'SA00 0000 0000 0000 0000 0000'),
-('contact_whatsapp', '966500000000'),
+('bank_name', 'بريد الجزائر CCP'),
+('bank_holder', 'اسمك الكامل'),
+('bank_iban', '007999990123456789'),
+('contact_whatsapp', '213663569663'),
 ('whatsapp_greeting', 'مرحباً، أريد الاستفسار عن العسل'),
-('contact_instagram', 'https://instagram.com/da_product'),
-('contact_tiktok', 'https://tiktok.com/@da_product'),
+('contact_instagram', 'https://instagram.com/d_a_product'),
+('contact_tiktok', 'https://tiktok.com/@asma.hacini'),
 ('low_stock_threshold', '10'),
 ('enable_whatsapp_notifications', '1')
 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);

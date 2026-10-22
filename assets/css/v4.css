@@ -355,34 +355,8 @@ html body .product-card .btn[disabled] {
 html body .add-to-cart-btn[disabled] { opacity: .55; cursor: not-allowed; }
 
 /* ==== animated logo mark ==== */
-html body .logo-mark {
-    display: inline-flex;
-    width: 48px;
-    height: 48px;
-    flex: 0 0 48px;
-    align-items: center;
-    justify-content: center;
-}
-html body .logo-mark svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    overflow: visible;
-    filter: drop-shadow(0 2px 6px rgba(189, 100, 18, .28));
-    transition: transform var(--tr);
-}
-html body .logo:hover .logo-mark svg { transform: scale(1.08) rotate(-4deg); }
-html body .logo-mark--footer {
-    width: 84px;
-    height: 84px;
-    flex-basis: 84px;
-    margin-bottom: .75rem;
-}
-html body .logo-mark--footer svg { filter: drop-shadow(0 3px 10px rgba(0, 0, 0, .35)); }
-
-@media (prefers-reduced-motion: reduce) {
-    html body .logo-mark svg { filter: none; }
-}
+/* (legacy SVG .logo-mark rules removed — the header/admin now use
+   .logo-mark-wrap + .logo-img with PNG assets) */
 
 
 
@@ -464,39 +438,15 @@ html body .logo:hover::after {
     50%      { transform: scale(1.025); }
 }
 
-/* Footer full logo — same treatment, slower */
-html body .logo-img-full {
-    width: 140px;
-    height: 140px;
-    object-fit: contain;
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
-    transition:
-        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-        filter 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-    animation: logo-breathe-slow 8s ease-in-out infinite;
-}
-html body a:hover .logo-img-full,
-html body .footer-brand:hover .logo-img-full {
-    transform: scale(1.03);
-    filter:
-        drop-shadow(0 0 8px rgba(223, 148, 23, 0.5))
-        drop-shadow(0 4px 16px rgba(0, 0, 0, 0.45));
-}
-
-/* Hide any leftover SVG mark container */
-html body .logo-mark { display: none; }
-
-/* Accessibility: no motion for users who prefer it */
+/* Footer full logo — removed: footer now uses .logo-img inside .logo-mark-wrap.
+   Accessibility: no motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
-    html body .logo-img,
-    html body .logo-img-full {
+    html body .logo-img {
         animation: none !important;
         transition: none !important;
     }
     html body .logo:hover .logo-img,
-    html body .logo:focus-visible .logo-img,
-    html body a:hover .logo-img-full {
+    html body .logo:focus-visible .logo-img {
         transform: none !important;
     }
     html body .logo:hover::after {
