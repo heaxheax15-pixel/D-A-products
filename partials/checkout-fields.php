@@ -13,12 +13,35 @@
         <input type="tel" id="customer_phone" name="customer_phone" required pattern="<?= e(algerian_phone_pattern_html()) ?>" placeholder="05xxxxxxxx" dir="ltr" value="<?= e($_POST['customer_phone'] ?? '') ?>">
     </div>
 </div>
-<div class="form-row">
+<div class="form-row checkout-location" id="locationBlock">
     <div>
-        <label for="customer_address">العنوان *</label>
-        <textarea id="customer_address" name="customer_address" required rows="3" placeholder="الولاية، البلدية، الشارع..."><?= e($_POST['customer_address'] ?? '') ?></textarea>
+        <label for="wilaya">الولاية *</label>
+        <select id="wilaya" required>
+            <option value="">اختر الولاية</option>
+        </select>
     </div>
 </div>
+<div class="form-row checkout-location" id="communeRow" hidden>
+    <div>
+        <label for="commune">البلدية *</label>
+        <select id="commune" required>
+            <option value="">اختر البلدية</option>
+        </select>
+    </div>
+</div>
+<div class="form-row" id="addressDetailsRow" hidden>
+    <div>
+        <label for="address_details">تفاصيل العنوان (الشارع، رقم المنزل...) *</label>
+        <input type="text" id="address_details" placeholder="مثال: حي 5 جويلية، عمارة 4...">
+    </div>
+</div>
+<div class="form-row" id="addressFallbackRow">
+    <div>
+        <label for="customer_address_fallback">العنوان الكامل *</label>
+        <textarea id="customer_address_fallback" name="customer_address" required rows="3" placeholder="الولاية، البلدية، الشارع..."><?= e($_POST['customer_address'] ?? '') ?></textarea>
+    </div>
+</div>
+<input type="hidden" id="customer_address" disabled>
 <div class="form-row">
     <div>
         <label>طريقة الدفع *</label>

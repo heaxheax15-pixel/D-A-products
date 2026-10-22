@@ -3,6 +3,7 @@
     <script>window.DA_CSRF = <?= json_encode(csrf_token(), JSON_UNESCAPED_UNICODE) ?>;</script>
     <script src="<?= asset('assets/js/main.min.js') ?>" defer></script>
     <script src="<?= asset('assets/js/cart.js') ?>" defer></script>
+    <script src="<?= asset('assets/js/location.js') ?>" defer></script>
     <script>
     (function(){
       var deferredPrompt=null;
