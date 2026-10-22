@@ -31,6 +31,7 @@ function db_sqlite_bootstrap(PDO $pdo): void
             customer_phone TEXT NOT NULL,
             customer_address TEXT NOT NULL,
             total_price REAL NOT NULL,
+            delivery_fee REAL NOT NULL DEFAULT 0,
             payment_method TEXT NOT NULL,
             receipt_path TEXT NULL,
             status TEXT NOT NULL DEFAULT \'pending\',
@@ -39,6 +40,11 @@ function db_sqlite_bootstrap(PDO $pdo): void
             updated_at TEXT DEFAULT CURRENT_TIMESTAMP
         )'
     );
+    // Add delivery_fee to pre-existing orders tables (idempotent).
+    $orderCols = $pdo->query('PRAGMA table_info(orders)')->fetchAll(PDO::FETCH_COLUMN, 1);
+    if (is_array($orderCols) && !in_array('delivery_fee', $orderCols, true)) {
+        $pdo->exec('ALTER TABLE orders ADD COLUMN delivery_fee REAL NOT NULL DEFAULT 0');
+    }
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,6 +86,12 @@ function db_sqlite_bootstrap(PDO $pdo): void
             setting_value TEXT NOT NULL
         )'
     );
+    // Ensure new settings keys exist on already-populated databases
+    // (the product seed below returns early when products already exist).
+    $pdo->exec("INSERT OR IGNORE INTO settings (setting_key, setting_value) VALUES
+        ('delivery_fee', '0'),
+        ('free_delivery_threshold', '0'),
+        ('delivery_company', '')");
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS login_attempts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -125,6 +137,9 @@ function db_sqlite_bootstrap(PDO $pdo): void
         ['contact_tiktok', 'https://tiktok.com/@asma.hacini'],
         ['low_stock_threshold', '10'],
         ['enable_whatsapp_notifications', '1'],
+        ['delivery_fee', '0'],
+        ['free_delivery_threshold', '0'],
+        ['delivery_company', ''],
     ];
     $stmt = $pdo->prepare('INSERT OR IGNORE INTO settings (setting_key, setting_value) VALUES (?, ?)');
     foreach ($settings as $s) {

@@ -24,6 +24,15 @@ $cart     = get_cart();
 $subtotal = get_cart_subtotal();
 $totalQty = get_cart_total_quantity();
 
+// Delivery fee is resolved server-side from settings; the customer-facing
+// total is recomputed again in submit-order.php so it cannot be tampered with.
+$deliveryFee   = max(0.0, (float) runtime('DELIVERY_FEE', '0'));
+$freeThreshold = max(0.0, (float) runtime('FREE_DELIVERY_THRESHOLD', '0'));
+if ($freeThreshold > 0 && $subtotal >= $freeThreshold) {
+    $deliveryFee = 0.0;
+}
+$grandTotal = $subtotal + $deliveryFee;
+
 $siteUrl = site_origin();
 ?>
 <!DOCTYPE html>
@@ -81,9 +90,17 @@ $siteUrl = site_origin();
                         </div>
 <?php endforeach; ?>
                     </div>
+                    <div class="checkout-summary-row">
+                        <span>المجموع الفرعي (<?= $totalQty ?> منتج)</span>
+                        <span><?= number_format($subtotal, 0) ?> دج</span>
+                    </div>
+                    <div class="checkout-summary-row">
+                        <span>التوصيل<?php if ($freeThreshold > 0 && $deliveryFee === 0.0): ?> <em>(مجاني)</em><?php endif; ?></span>
+                        <span><?= $deliveryFee > 0 ? number_format($deliveryFee, 0) . ' دج' : 'مجاني' ?></span>
+                    </div>
                     <div class="checkout-summary-total">
-                        <span>الإجمالي (<?= $totalQty ?> منتج)</span>
-                        <strong><?= number_format($subtotal, 0) ?> دج</strong>
+                        <span>الإجمالي</span>
+                        <strong><?= number_format($grandTotal, 0) ?> دج</strong>
                     </div>
                     <a href="cart.php" class="checkout-edit-link">← تعديل السلة</a>
                 </aside>

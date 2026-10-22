@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS orders (
   customer_phone VARCHAR(20) NOT NULL,
   customer_address TEXT NOT NULL,
   total_price DECIMAL(10,2) NOT NULL,
+  delivery_fee DECIMAL(10,2) NOT NULL DEFAULT 0,
   payment_method VARCHAR(30) NOT NULL,
   receipt_path VARCHAR(500) NULL,
   status VARCHAR(30) NOT NULL DEFAULT 'pending',
@@ -104,5 +105,8 @@ INSERT INTO settings (setting_key, setting_value) VALUES
 ('contact_instagram', 'https://instagram.com/d_a_product'),
 ('contact_tiktok', 'https://tiktok.com/@asma.hacini'),
 ('low_stock_threshold', '10'),
-('enable_whatsapp_notifications', '1')
+('enable_whatsapp_notifications', '1'),
+('delivery_fee', '0'),
+('free_delivery_threshold', '0'),
+('delivery_company', '')
 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);

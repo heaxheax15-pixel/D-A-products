@@ -33,6 +33,9 @@ function runtime(string $constName, string $fallback): string
         'WHATSAPP_GREETING' => 'whatsapp_greeting',
         'CONTACT_INSTAGRAM' => 'contact_instagram',
         'CONTACT_TIKTOK' => 'contact_tiktok',
+        'DELIVERY_FEE' => 'delivery_fee',
+        'FREE_DELIVERY_THRESHOLD' => 'free_delivery_threshold',
+        'DELIVERY_COMPANY' => 'delivery_company',
     ];
     if (isset($map[$constName])) {
         $v = setting($map[$constName]);

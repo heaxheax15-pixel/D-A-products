@@ -195,9 +195,10 @@ if ($input->payment === 'bank_transfer') {
 // ---------------------------------------------------------------------------
 // Database transaction – create order, order items, decrement stock
 // ---------------------------------------------------------------------------
-$orderId    = null;
-$totalPrice = 0.0;
-$dbItems    = [];
+$orderId     = null;
+$totalPrice  = 0.0;
+$deliveryFee = 0.0;
+$dbItems     = [];
 
 try {
     $pdo    = db();
@@ -238,26 +239,36 @@ try {
         ];
     }
 
-    // 2️⃣ Insert order
+    // 2️⃣ Delivery fee – recomputed server-side, never trusted from POST.
+    $subtotal      = $totalPrice;
+    $deliveryFee   = max(0.0, (float) runtime('DELIVERY_FEE', '0'));
+    $freeThreshold = max(0.0, (float) runtime('FREE_DELIVERY_THRESHOLD', '0'));
+    if ($freeThreshold > 0 && $subtotal >= $freeThreshold) {
+        $deliveryFee = 0.0;
+    }
+    $totalPrice = $subtotal + $deliveryFee;
+
+    // 3️⃣ Insert order
     $ts = $driver === 'mysql' ? 'NOW()' : 'CURRENT_TIMESTAMP';
     $orderStmt = $pdo->prepare(
         "INSERT INTO orders
-            (customer_name, customer_phone, customer_address, total_price,
+            (customer_name, customer_phone, customer_address, total_price, delivery_fee,
              payment_method, receipt_path, status, notes, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, {$ts}, {$ts})"
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, {$ts}, {$ts})"
     );
     $orderStmt->execute([
         $input->name,
         $input->phone,
         $input->address,
         $totalPrice,
+        $deliveryFee,
         $input->payment,
         $receiptPath,
         $input->notes !== '' ? $input->notes : null,
     ]);
     $orderId = (int)$pdo->lastInsertId();
 
-    // 3️⃣ Insert order items, decrement stock, optional audit log
+    // 4️⃣ Insert order items, decrement stock, optional audit log
     $itemStmt = $pdo->prepare(
         'INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)'
     );
