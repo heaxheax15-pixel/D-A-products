@@ -245,6 +245,48 @@
     }, 5000);
   }
 
+  /* Build a pre-filled WhatsApp link so the customer can one-tap send the
+     order to the store. The store number is read from the float link, which
+     partials/whatsapp.php renders from the configured CONTACT_WHATSAPP. */
+  function buildOrderWhatsAppUrl(orderId) {
+    var float = document.querySelector(".whatsapp-float");
+    var storeNum = "";
+    if (float) {
+      var m = (float.getAttribute("href") || "").match(/wa\.me\/(\d+)/);
+      if (m) storeNum = m[1];
+    }
+    if (!storeNum) return "";
+
+    function val(id) {
+      var el = document.getElementById(id);
+      return el ? (el.value || "").trim() : "";
+    }
+    var parts = ["مرحباً، لقد قمت بطلب من متجركم:", ""];
+    if (orderId) parts.push("رقم الطلب: #" + orderId);
+    var name = val("customer_name");
+    if (name) parts.push("الاسم: " + name);
+    var phone = val("customer_phone");
+    if (phone) parts.push("الهاتف: " + phone);
+
+    var wilaya = val("wilaya");
+    var commune = val("commune");
+    var details = val("address_details");
+    var address =
+      val("customer_address") ||
+      val("customer_address_fallback") ||
+      [wilaya, commune, details].filter(Boolean).join(" - ");
+    if (address) parts.push("العنوان: " + address);
+
+    var totalEl = orderTotal;
+    if (totalEl && totalEl.textContent) {
+      parts.push(totalEl.textContent.trim());
+    }
+
+    parts.push("");
+    parts.push("يرجى تأكيد الطلب.");
+    return "https://wa.me/" + storeNum + "?text=" + encodeURIComponent(parts.join("\n"));
+  }
+
   /* AJAX order */
   if (orderForm) {
     orderForm.addEventListener("submit", function (e) {
@@ -268,10 +310,18 @@
         })
         .then(function (data) {
           if (data.success) {
+            var waUrl = buildOrderWhatsAppUrl(data.order_id);
             orderForm.reset();
             updateTotal();
             if (bankInfo) bankInfo.hidden = true;
             showToast(data.message, false);
+            if (waUrl) {
+              setTimeout(function () {
+                if (window.confirm("تم استلام طلبك بنجاح! هل تريد إرساله إلينا عبر واتساب لتأكيده بشكل أسرع؟")) {
+                  window.open(waUrl, "_blank", "noopener");
+                }
+              }, 600);
+            }
           } else {
             showToast(data.message || "حدث خطأ.", true);
           }

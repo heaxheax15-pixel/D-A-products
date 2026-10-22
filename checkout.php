@@ -116,6 +116,46 @@ $siteUrl = site_origin();
     });
     syncPayment();
 
+    // Build a pre-filled WhatsApp link so the customer can send the order to
+    // the store in one tap. The store number comes from the existing float
+    // link (single source of truth, set by partials/whatsapp.php).
+    function buildOrderWhatsAppUrl(orderId) {
+        var float = document.querySelector('.whatsapp-float');
+        var storeNum = '';
+        if (float) {
+            var m = (float.getAttribute('href') || '').match(/wa\.me\/(\d+)/);
+            if (m) storeNum = m[1];
+        }
+        if (!storeNum) return '';
+
+        function val(id) {
+            var el = document.getElementById(id);
+            return el ? (el.value || '').trim() : '';
+        }
+        var parts = [];
+        parts.push('مرحباً، لقد قمت بطلب من متجركم:');
+        parts.push('');
+        if (orderId) parts.push('رقم الطلب: #' + orderId);
+        var name = val('customer_name');
+        if (name) parts.push('الاسم: ' + name);
+        var phone = val('customer_phone');
+        if (phone) parts.push('الهاتف: ' + phone);
+
+        var wilaya = val('wilaya');
+        var commune = val('commune');
+        var details = val('address_details');
+        var address = val('customer_address_fallback') || [wilaya, commune, details].filter(Boolean).join(' - ');
+        if (address) parts.push('العنوان: ' + address);
+
+        var totalEl = document.querySelector('.checkout-summary strong');
+        if (totalEl) parts.push('الإجمالي: ' + totalEl.textContent.trim());
+
+        parts.push('');
+        parts.push('يرجى تأكيد الطلب.');
+
+        return 'https://wa.me/' + storeNum + '?text=' + encodeURIComponent(parts.join('\n'));
+    }
+
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         var phone = document.getElementById('customer_phone');
@@ -138,11 +178,13 @@ $siteUrl = site_origin();
         .then(function (data) {
             if (data && data.success) {
                 var main = document.getElementById('main-content');
+                var waUrl = buildOrderWhatsAppUrl(data.order_id);
                 main.innerHTML =
                     '<div class="container" style="max-width:640px;margin:0 auto;padding:clamp(3rem,8vw,6rem) 1rem;text-align:center;">' +
                     '<h1 style="color:var(--amber);font-size:clamp(1.6rem,5vw,2.4rem);margin-bottom:1rem;">تم استلام طلبك بنجاح!</h1>' +
                     '<p style="font-size:1.05rem;margin-bottom:.5rem;">' + (data.order_id ? ('رقم الطلب: <strong>#' + data.order_id + '</strong>') : '') + '</p>' +
-                    '<p style="color:var(--deep);margin-bottom:2rem;">' + (data.message || 'سنتواصل معك قريباً لتأكيد الطلب.') + '</p>' +
+                    '<p style="color:var(--deep);margin-bottom:1.5rem;">' + (data.message || 'سنتواصل معك قريباً لتأكيد الطلب.') + '</p>' +
+                    (waUrl ? ('<a href="' + waUrl + '" target="_blank" rel="noopener" class="btn btn-whatsapp btn-lg">إرسال تفاصيل الطلب عبر واتساب</a>') : '') +
                     '<a href="index.php" class="btn btn-primary btn-lg">العودة للرئيسية</a>' +
                     '</div>';
                 window.scrollTo(0, 0);
