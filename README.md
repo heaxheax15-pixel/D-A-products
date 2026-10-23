@@ -109,8 +109,8 @@ chmod 755 storage/ uploads/ -R
 ### **4. Start Server**
 
 ```bash
-# PHP built-in server (development)
-php -S localhost:8000
+# PHP built-in server (development) — router.php blocks .env / storage / includes
+php -S localhost:8000 router.php
 
 # Production: Use Apache/Nginx with PHP-FPM
 ```
@@ -119,7 +119,7 @@ php -S localhost:8000
 
 - **Store:** http://localhost:8000
 - **Admin:** http://localhost:8000/login.php
-- **Credentials:** Key = `wedothebesthonyhere` (from .env)
+- **Credentials:** Key = `ADMIN_SECRET_KEY` from `.env`
 
 ---
 
@@ -297,8 +297,12 @@ so a stale or truncated min file can never ship silently.
 ### Run Dev Server
 
 ```bash
-php -S localhost:8000
+php -S localhost:8000 router.php
 ```
+
+> `router.php` mirrors the `.htaccess` rules on the PHP built-in server:
+> it returns 403 for `.env*`, `storage/`, `includes/`, `vendor/` and other
+> source files, so secrets are never exposed even without Apache.
 
 ---
 

@@ -9,6 +9,17 @@
     Require all denied
 </Files>
 
+# Never serve dotfiles (.env, .env.example, .gitignore, .htaccess, ...)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Never serve sensitive directories / source files
+RedirectMatch 403 ^/(storage|includes|vendor|node_modules|bot)(/|$)
+<FilesMatch "\.(sql|sqlite|sqlite3|db|log|md|lock|dist|ini|bak)$">
+    Require all denied
+</FilesMatch>
+
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
